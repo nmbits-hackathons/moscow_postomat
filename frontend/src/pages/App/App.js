@@ -2,7 +2,10 @@ import Maps from "../Maps"
 import './App.css';
 
 function App() {
-    return <div><Maps /></div>;
+    const handleTest = (map) => {
+        console.log(map)
+    }
+    return <div><Maps {...{handleTest}} /></div>;
 }
 
 export default App;

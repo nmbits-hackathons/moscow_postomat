@@ -1,20 +1,33 @@
 import React, { useEffect, useRef } from 'react';
-import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
+import { Map } from 'maplibre-gl';
 
 import './maps.css';
 
-const MyMap = () => {
-    return <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
-        <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://maps.geoapify.com/v1/tile/carto/{z}/{x}/{y}.png?&apiKey=3929778c687f40708c37d2155877714a"
-        />
-        <Marker position={[51.505, -0.09]}>
-            <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-        </Marker>
-    </MapContainer>;
+const MyMap = ({handleTest}) => {
+    const mapContainer = useRef(null);
+
+    useEffect(() => {
+        const myAPIKey = '3929778c687f40708c37d2155877714a';
+        const mapStyle =
+            'https://maps.geoapify.com/v1/styles/klokantech-basic/style.json';
+
+        const initialState = {
+            lng: 37.55,
+            lat: 55.74,
+            zoom: 11,
+        };
+
+        const map = new Map({
+            container: mapContainer.current,
+            style: `${mapStyle}?apiKey=${myAPIKey}`,
+            center: [initialState.lng, initialState.lat],
+            zoom: initialState.zoom,
+        });
+
+        handleTest(map);
+    }, [mapContainer.current]);
+
+    return <div className="map-container" style={{ width: "100vw", height: "100vh"}} ref={mapContainer}></div>;
 };
 
 export default MyMap;
