@@ -9,7 +9,7 @@ const MyMap = ({handleTest}) => {
     useEffect(() => {
         const myAPIKey = '3929778c687f40708c37d2155877714a';
         const mapStyle =
-            'https://maps.geoapify.com/v1/styles/klokantech-basic/style.json';
+            'https://maps.geoapify.com/v1/styles/dark-matter/style.json';
 
         const initialState = {
             lng: 37.55,
