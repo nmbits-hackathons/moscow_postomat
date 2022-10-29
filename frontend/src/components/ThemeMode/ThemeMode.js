@@ -1,13 +1,11 @@
 import Switch from '@mui/material/Switch';
 import { styled } from '@mui/material/styles';
+import {darkThemeMode} from "../../pages/App/App";
 
 // прокинуть метод изменения режима темы
-export const ThemeMode = ({handleChangeMode}) => {
+export const ThemeMode = ({handleChangeMode, mode}) => {
     const MaterialUISwitch = styled(Switch)(({ theme }) => ({
-        position: 'absolute',
-        right: '20px',
-        bottom: '20px',
-        zIndex: 1000,
+        justifySelf: 'flex-end',
         width: 62,
         height: 34,
         padding: 7,
@@ -53,5 +51,5 @@ export const ThemeMode = ({handleChangeMode}) => {
             borderRadius: 20 / 2,
         },
     }));
-    return <MaterialUISwitch sx={{ m: 1 }} defaultChecked onChange={handleChangeMode} />
+    return <MaterialUISwitch sx={{ m: 1 }} checked={mode === darkThemeMode} onChange={handleChangeMode} />
 }
