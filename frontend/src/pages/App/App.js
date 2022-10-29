@@ -2,10 +2,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Maps from "../Maps"
-import ActionMenu from "../../components/ActionMenu";
 import './App.css';
 import {useState} from "react";
 import {darkModeStyle, lightMapStyle} from "../Maps/Maps";
+import {Header} from '../../components/Header'
+import {SideBar} from '../../components/SideBar'
 
 export const darkThemeMode = 'dark'
 export const lightThemeMode = 'light'
@@ -29,7 +30,8 @@ function App() {
     return (
         <BrowserRouter>
             <ThemeProvider theme={theme}>
-                <ActionMenu handleChangeMode={handleChangeMode}/>
+                <SideBar {...{handleChangeMode, mode}} />
+                <Header />
                 <CssBaseline />
                 <Routes>
                     <Route path="/" element={<Maps {...{handleTest, mode}} /> }>
