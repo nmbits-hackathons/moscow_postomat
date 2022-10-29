@@ -18,7 +18,7 @@ export const Header = () => {
         left: `96px`,
         display: 'flex',
         background: 'none',
-        color: '#9EA2B0',
+        color: theme.palette.background.default,
         width: `calc(100% - (96px + 16px))`,
         height: '80px',
       }}
