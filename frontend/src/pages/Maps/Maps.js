@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Map } from 'maplibre-gl';
 
 import {darkThemeMode} from "../App/App";
 import {Filters} from "../../components/Filters";
 import './maps.css';
+import {MapControl} from "./components/MapControl";
 
 const myAPIKey = '3929778c687f40708c37d2155877714a';
 export const lightMapStyle = `https://maps.geoapify.com/v1/styles/positron/style.json?apiKey=${myAPIKey}`
@@ -12,13 +13,13 @@ export const darkModeStyle =
 
 const MyMap = ({handleTest, mode}) => {
     const mapContainer = useRef(null);
+    const [initialState, setInitialState] = useState({
+        lng: 37.55,
+        lat: 55.74,
+        zoom: 11,
+    })
 
     useEffect(() => {
-        const initialState = {
-            lng: 37.55,
-            lat: 55.74,
-            zoom: 11,
-        };
 
         const map = new Map({
             container: mapContainer.current,
@@ -33,6 +34,7 @@ const MyMap = ({handleTest, mode}) => {
     return <div>
         <Filters />
         <div className="map-container" style={{ width: "100vw", height: "100vh"}} ref={mapContainer}></div>
+        <MapControl />
     </div>;
 };
 
