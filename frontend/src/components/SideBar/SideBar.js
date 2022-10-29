@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material/styles';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
@@ -15,11 +15,14 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import Logo from '../../assets/logo.png'
 import {ThemeMode} from "../ThemeMode";
+import {ANALYTICS_PATH, FAVOURITES_PATH, MAIN_PATH, NEWS_PATH} from "../../constants/path";
 
 export const SideBar = ({handleChangeMode, mode}) => {
     const theme = useTheme()
     let location = useLocation();
+    const navigate = useNavigate();
     const path = location.pathname
+    const handleNavigate = (path) => navigate(path)
     return  (
         <Box sx={{
             position: 'absolute',
@@ -50,85 +53,97 @@ export const SideBar = ({handleChangeMode, mode}) => {
                 maxWidth: '96px',
 
             }}>
-                 <ListItemButton sx={{
-                      minHeight: 48,
-                      flexFlow: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      boxSizing: 'border-box',
-                      borderRight: path === "/" ? '3px solid red' : '',
-                      marginBottom: '10px'
-                 }}>
+                 <ListItemButton
+                     onClick={() => handleNavigate(MAIN_PATH)}
+                     sx={{
+                        minHeight: 48,
+                        flexFlow: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxSizing: 'border-box',
+                        borderRight: path === MAIN_PATH ? '3px solid red' : '',
+                        marginBottom: '10px'
+                      }}
+                 >
                        <ListItemIcon sx={{
                             minWidth: 0,
                             justifyContent: 'center',
                        }}>
-                            <TravelExploreIcon fontSize="large" color={path === "/" ? "error" : 'disabled'} />
+                            <TravelExploreIcon fontSize="large" color={path === MAIN_PATH ? "error" : 'disabled'} />
                        </ListItemIcon>
                        <ListItemText primary={"Карта"} sx={{
                            opacity: 1,
-                           color: path === "/" ? theme.palette.text.primary : theme.palette.text.secondary
+                           color: path === MAIN_PATH ? theme.palette.text.primary : theme.palette.text.secondary
                        }}/>
                  </ListItemButton>
-                <ListItemButton sx={{
-                    minHeight: 48,
-                    flexFlow: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxSizing: 'border-box',
-                    marginBottom: '10px',
-                    borderRight: path === "/favorite" ? '2px solid red' : ''
-                }}>
+                <ListItemButton
+                    onClick={() => handleNavigate(FAVOURITES_PATH)}
+                    sx={{
+                        minHeight: 48,
+                        flexFlow: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxSizing: 'border-box',
+                        marginBottom: '10px',
+                        borderRight: path === FAVOURITES_PATH ? '3px solid red' : ''
+                    }}
+                >
                     <ListItemIcon sx={{
                         minWidth: 0,
                         justifyContent: 'center',
                     }}>
-                        <FavoriteBorderIcon fontSize="large" color={path === "/favorite" ? "error" : 'disabled'}/>
+                        <FavoriteBorderIcon fontSize="large" color={path === FAVOURITES_PATH ? "error" : 'disabled'}/>
                     </ListItemIcon>
                     <ListItemText primary={"Избранное"} sx={{
                         opacity: 1,
-                        color: path === "/favorite" ? theme.palette.text.primary : theme.palette.text.secondary
+                        color: path === FAVOURITES_PATH ? theme.palette.text.primary : theme.palette.text.secondary
                     }}/>
                 </ListItemButton>
-                <ListItemButton sx={{
-                    minHeight: 48,
-                    flexFlow: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxSizing: 'border-box',
-                    marginBottom: '10px',
-                    borderRight: path === "/trending" ? '2px solid red' : ''
-                }}>
+                <ListItemButton
+                    onClick={() => handleNavigate(ANALYTICS_PATH)}
+                    sx={{
+                        minHeight: 48,
+                        flexFlow: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxSizing: 'border-box',
+                        marginBottom: '10px',
+                        borderRight: path === ANALYTICS_PATH ? '3px solid red' : ''
+                    }}
+                >
                     <ListItemIcon sx={{
                         minWidth: 0,
                         justifyContent: 'center',
                     }}>
-                        <TrendingUpIcon fontSize="large" color={path === "/trending" ? "error" : 'disabled'}/>
+                        <TrendingUpIcon fontSize="large" color={path === ANALYTICS_PATH ? "error" : 'disabled'}/>
                     </ListItemIcon>
                     <ListItemText primary={"Аналитика"} sx={{
                         opacity: 1,
-                        color: path === "/trending" ? theme.palette.text.primary : theme.palette.text.secondary
+                        color: path === ANALYTICS_PATH ? theme.palette.text.primary : theme.palette.text.secondary
 
                     }}/>
                 </ListItemButton>
-                <ListItemButton sx={{
-                    minHeight: 48,
-                    flexFlow: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxSizing: 'border-box',
-                    marginBottom: '10px',
-                    borderRight: path === "/news" ? '2px solid red' : ''
-                }}>
+                <ListItemButton
+                    onClick={() => handleNavigate(NEWS_PATH)}
+                    sx={{
+                        minHeight: 48,
+                        flexFlow: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxSizing: 'border-box',
+                        marginBottom: '10px',
+                        borderRight: path === NEWS_PATH ? '3px solid red' : ''
+                    }}
+                >
                     <ListItemIcon sx={{
                         minWidth: 0,
                         justifyContent: 'center',
                     }}>
-                        <AnnouncementIcon fontSize="large" color={path === "/news" ? "error" : 'disabled'} />
+                        <AnnouncementIcon fontSize="large" color={path === NEWS_PATH ? "error" : 'disabled'} />
                     </ListItemIcon>
                     <ListItemText primary={"Новости"} sx={{
                         opacity: 1,
-                        color: path === "/news" ? theme.palette.text.primary : theme.palette.text.secondary
+                        color: path === NEWS_PATH ? theme.palette.text.primary : theme.palette.text.secondary
 
                     }}/>
                 </ListItemButton>
