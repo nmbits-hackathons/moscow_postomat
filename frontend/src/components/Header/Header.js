@@ -9,27 +9,26 @@ import {grey} from '@mui/material/colors';
 
 // TODO - сделать по дизайну
 export const Header = () => {
-    const theme = useTheme()
+  const theme = useTheme();
 
     return (
          <Box sx={{
              position: 'absolute',
              zIndex: 1000,
-             left:`96px`,
+             top: '8px',
+             right: '16px',
+             left: `96px`,
              display: 'flex',
              background: 'none',
              color: '#9EA2B0',
-             width: `calc(100% - 96px)`,
-             height: '90px',
+             width: `calc(100% - (96px + 16px))`,
+             height: '80px',
          }}>
               <Toolbar sx={{
                   width: '100%',
                   marginLeft: '20px',
                   background: theme.palette.background.default,
                   borderRadius: '20px',
-                  justifyContent: 'space-between',
-                  marginRight: '16px',
-                  marginTop: '8px',
               }}>
                    {/*<Typography variant="h6" noWrap component="div">*/}
                    {/*    Mini variant drawer*/}
