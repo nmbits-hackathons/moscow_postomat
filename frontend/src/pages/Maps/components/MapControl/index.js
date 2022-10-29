@@ -1,1 +1,1 @@
-export * from "./MapControl"
+export * from './MapControl';
