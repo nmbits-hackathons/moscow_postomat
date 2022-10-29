@@ -2,15 +2,17 @@ import React, { useEffect, useRef } from 'react';
 import { Map } from 'maplibre-gl';
 
 import './maps.css';
+import {darkThemeMode} from "../App/App";
 
-const MyMap = ({handleTest}) => {
+const myAPIKey = '3929778c687f40708c37d2155877714a';
+export const lightMapStyle = `https://maps.geoapify.com/v1/styles/positron/style.json?apiKey=${myAPIKey}`
+export const darkModeStyle =
+    `https://maps.geoapify.com/v1/styles/dark-matter/style.json?apiKey=${myAPIKey}`;
+
+const MyMap = ({handleTest, mode}) => {
     const mapContainer = useRef(null);
 
     useEffect(() => {
-        const myAPIKey = '3929778c687f40708c37d2155877714a';
-        const mapStyle =
-            'https://maps.geoapify.com/v1/styles/dark-matter/style.json';
-
         const initialState = {
             lng: 37.55,
             lat: 55.74,
@@ -19,7 +21,7 @@ const MyMap = ({handleTest}) => {
 
         const map = new Map({
             container: mapContainer.current,
-            style: `${mapStyle}?apiKey=${myAPIKey}`,
+            style: mode === darkThemeMode ? darkModeStyle : lightMapStyle,
             center: [initialState.lng, initialState.lat],
             zoom: initialState.zoom,
         });
