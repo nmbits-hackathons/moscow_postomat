@@ -5,8 +5,12 @@ import Maps from "../Maps"
 import './App.css';
 import {useState} from "react";
 import {darkModeStyle, lightMapStyle} from "../Maps/Maps";
+import { Favourites } from '../Favourites'
+import { Analytics } from '../Analytics'
+import { News } from '../News'
 import {Header} from '../../components/Header'
 import {SideBar} from '../../components/SideBar'
+import {ANALYTICS_PATH, FAVOURITES_PATH, MAIN_PATH, NEWS_PATH} from "../../constants/path";
 
 export const darkThemeMode = 'dark'
 export const lightThemeMode = 'light'
@@ -34,8 +38,10 @@ function App() {
                 <Header />
                 <CssBaseline />
                 <Routes>
-                    <Route path="/" element={<Maps {...{handleTest, mode}} /> }>
-                    </Route>
+                    <Route path={MAIN_PATH} element={<Maps {...{handleTest, mode}} /> } />
+                    <Route path={FAVOURITES_PATH} element={<Favourites /> } />
+                    <Route path={ANALYTICS_PATH} element={<Analytics /> } />
+                    <Route path={NEWS_PATH} element={<News /> } />
                 </Routes>
 
             </ThemeProvider>
