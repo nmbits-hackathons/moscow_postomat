@@ -17,20 +17,13 @@ import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-
+import {
+  ITEM_HEIGHT,
+  ITEM_PADDING_TOP,
+  MenuProps,
+  names,
+} from './Filters.constants';
 //--------------------------------mock
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-const names = ['ЦАО', 'ЮАО', 'ЮВАО', 'ЮЗАО'];
 
 function getStyles(name, personName, theme) {
   return {
@@ -52,11 +45,6 @@ export const Filters = () => {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
-  // const AccordionDetails = (({ theme }) => ({
-  //   padding: theme.spacing(2),
-  //   borderTop: '1px solid rgba(0, 0, 0, .125)',
-  // }));
 
   //----------------------mock-----------------------
   const [personName, setPersonName] = useState([]);
@@ -394,13 +382,12 @@ export const Filters = () => {
             {/*<TextField fullWidth label="fullWidth" id="fullWidth" />*/}
           </AccordionDetails>
         </Accordion>
-        <div style={{ marginTop: '16px' }}></div>
         <Accordion
           disableGutters={true}
           style={{
+            marginTop: '16px',
             border: 'none',
             boxShadow: 'none',
-            marginTop: '0px',
             background: 'none',
             width: '100%',
           }}
