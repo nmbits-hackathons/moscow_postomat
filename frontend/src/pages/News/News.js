@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
-
+import NewsImg from '../../assets/news.png'
 export const News = () => {
   const theme = useTheme();
 
@@ -9,14 +9,18 @@ export const News = () => {
       sx={{
         zIndex: 1000,
         marginLeft: '96px',
-        padding: '103px 15px 15px 15px',
-        display: 'flex',
         background: theme.palette.action.hover,
         minHeight: '100vh',
-        width: '100%',
+        height: '100%'
       }}
     >
-      News
+      <img alt="news" src={NewsImg} style={{
+          objectFit: 'fill',
+          width: "100%",
+          height: 'calc(100vh - 90px)',
+          marginTop: `98px`,
+          marginRight: '10px'
+      }}/>
     </Box>
   );
 };
