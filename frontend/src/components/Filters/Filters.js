@@ -1,11 +1,11 @@
 import { useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import {
   AccordionDetails,
   AccordionSummary,
   Accordion,
-  TextField,
   OutlinedInput,
   Select,
   MenuItem,
@@ -16,7 +16,7 @@ import {
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MuiAccordion from '@mui/material/Accordion';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 //--------------------------------mock
 const ITEM_HEIGHT = 48;
@@ -48,7 +48,7 @@ export const Filters = () => {
   const location = useLocation();
   const path = location.pathname;
   const [expanded, setExpanded] = useState(false);
-
+  const [showFilters, setShowFilters] = useState(false);
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -106,7 +106,23 @@ export const Filters = () => {
       color: theme.palette.text.secondary,
     },
   };
-
+  if (!showFilters) {
+    return (
+      <Button
+        variant="outlined"
+        onClick={() => setShowFilters((prev) => !prev)}
+        sx={{
+          position: 'absolute',
+          left: '116px',
+          bottom: '12px',
+          zIndex: 1000,
+        }}
+        endIcon={<ArrowForwardIosIcon />}
+      >
+        Параметры поиска
+      </Button>
+    );
+  }
   return (
     <Box
       sx={{
@@ -123,313 +139,52 @@ export const Filters = () => {
         padding: '20px 24px 24px 24px',
         flexDirection: 'column',
         overflowY: 'auto',
+        justifyContent: 'space-between',
       }}
     >
-      <Accordion
-        disableGutters={true}
-        style={{
-          border: 'none',
-          boxShadow: 'none',
-          marginTop: '0px',
-          background: 'none',
-          width: '100%',
-        }}
-        defaultExpanded={true}
-        elevation={0}
-        expanded={expanded === 'panel1'}
-        onChange={handleChange('panel1')}
-      >
-        <AccordionSummary
-          style={{
-            padding: '0',
-            paddingBottom: '16px',
-            borderBottom: 'solid 1px ' + theme.palette.divider,
-          }}
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1d-content"
-          id="panel1d-header"
-        >
-          <Typography variant={'h5'} style={{ marginLeft: '0px' }}>
-            Месторасположение
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails style={{ padding: '0' }}>
-          <div style={{ height: '20px' }}></div>
-          <Typography color={theme.palette.text.secondary}>
-            Административный округ
-          </Typography>
-
-          <div style={{ height: '4px' }}></div>
-
-          <Select
-            labelId="demo-multiple-chip-label"
-            id="demo-multiple-chip"
-            multiple={true}
-            InputLabelProps={{ shrink: false }}
-            fullWidth={true}
-            sx={selectStyles}
-            value={personName}
-            onChange={handleChange1}
-            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-            renderValue={(selected) => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-            MenuProps={MenuProps}
-          >
-            {names.map((name) => (
-              <MenuItem
-                key={name}
-                value={name}
-                style={getStyles(name, personName, theme)}
-              >
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-
-          <div style={{ height: '16px' }}></div>
-
-          <Typography color={theme.palette.text.secondary}>Район</Typography>
-
-          <div style={{ height: '4px' }}></div>
-
-          <Select
-            labelId="demo-multiple-chip-label"
-            id="demo-multiple-chip"
-            multiple={true}
-            InputLabelProps={{ shrink: false }}
-            fullWidth={true}
-            sx={selectStyles}
-            value={personName}
-            onChange={handleChange1}
-            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-            renderValue={(selected) => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-            MenuProps={MenuProps}
-          >
-            {names.map((name) => (
-              <MenuItem
-                key={name}
-                value={name}
-                style={getStyles(name, personName, theme)}
-              >
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-
-          {/*<TextField fullWidth label="fullWidth" id="fullWidth" />*/}
-        </AccordionDetails>
-      </Accordion>
-
-      <div style={{ marginTop: '16px' }}></div>
-      {/*------------------------------------------------------------------------------------------*/}
-      <Accordion
-        disableGutters={true}
-        style={{
-          border: 'none',
-          boxShadow: 'none',
-          marginTop: '0px',
-          background: 'none',
-          width: '100%',
-        }}
-        defaultExpanded={true}
-        expanded={expanded === 'panel2'}
-        onChange={handleChange('panel2')}
-        elevation={0}
+      <Box
         sx={{
-          '&.MuiAccordion-root:before': {
-            backgroundColor: 'transparent',
-          },
+          display: 'flex',
+          flexFlow: 'column nowrap',
+          gap: '24px',
         }}
       >
-        <AccordionSummary
+        <Accordion
+          disableGutters={true}
           style={{
-            padding: '0',
-            paddingBottom: '16px',
-            borderBottom: 'solid 1px ' + theme.palette.divider,
+            border: 'none',
+            boxShadow: 'none',
+            marginTop: '0px',
+            background: 'none',
+            width: '100%',
           }}
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1d-content"
-          id="panel1d-header"
+          defaultExpanded={true}
+          elevation={0}
+          expanded={expanded === 'panel1'}
+          onChange={handleChange('panel1')}
         >
-          <Typography variant={'h5'} style={{ marginLeft: '0px' }}>
-            Расчет
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails style={{ padding: '0' }}>
-          <div style={{ height: '20px' }}></div>
-          <Typography color={theme.palette.text.secondary}>
-            Алгоритм расчета
-          </Typography>
-
-          <div style={{ height: '4px' }}></div>
-
-          <FormControl sx={{ width: '100%' }}>
-            <InputLabel
-              sx={inputLabelStyles}
-              shrink={false}
-              id="demo-multiple-chip-label1"
-            >
-              {!selected && 'Выберите модель для расчета'}
-            </InputLabel>
-            <Select
-              labelId="demo-multiple-chip-label"
-              id="demo-multiple-chip"
-              multiple={true}
-              InputLabelProps={{ shrink: false }}
-              fullWidth={true}
-              sx={selectStyles}
-              value={personName}
-              label={'Age'}
-              placeholder={'skj'}
-              onChange={handleChange1}
-              input={<OutlinedInput label="Name" />}
-              renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} />
-                  ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {names.map((name) => (
-                <MenuItem
-                  key={name}
-                  value={name}
-                  style={getStyles(name, personName, theme)}
-                >
-                  {name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <div style={{ height: '16px' }}></div>
-
-          <Typography color={theme.palette.text.secondary}>Район</Typography>
-
-          <div style={{ height: '4px' }}></div>
-
-          <Select
-            labelId="demo-multiple-chip-label"
-            id="demo-multiple-chip"
-            multiple={true}
-            InputLabelProps={{ shrink: false }}
-            fullWidth={true}
-            sx={selectStyles}
-            value={personName}
-            onChange={handleChange1}
-            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-            renderValue={(selected) => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-            MenuProps={MenuProps}
-          >
-            {names.map((name) => (
-              <MenuItem
-                key={name}
-                value={name}
-                style={getStyles(name, personName, theme)}
-              >
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
-
-          <div style={{ height: '16px' }}></div>
-
-          <Typography color={theme.palette.text.secondary}>
-            Количество постаматов
-          </Typography>
-
-          <OutlinedInput
-            sx={selectStyles}
-            id="filled-number"
-            label="Number"
-            type="number"
-            InputLabelProps={{
-              shrink: false,
+          <AccordionSummary
+            style={{
+              padding: '0',
+              paddingBottom: '16px',
+              borderBottom: 'solid 1px ' + theme.palette.divider,
             }}
-          />
-
-          {/*<TextField fullWidth label="fullWidth" id="fullWidth" />*/}
-        </AccordionDetails>
-      </Accordion>
-      <div style={{ marginTop: '16px' }}></div>
-      <Accordion
-        disableGutters={true}
-        style={{
-          border: 'none',
-          boxShadow: 'none',
-          marginTop: '0px',
-          background: 'none',
-          width: '100%',
-        }}
-        defaultExpanded={true}
-        expanded={expanded === 'panel2'}
-        onChange={handleChange('panel2')}
-        elevation={0}
-        sx={{
-          '&.MuiAccordion-root:before': {
-            backgroundColor: 'transparent',
-          },
-        }}
-      >
-        <AccordionSummary
-          style={{
-            padding: '0',
-            paddingBottom: '16px',
-            borderBottom: 'solid 1px ' + theme.palette.divider,
-          }}
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1d-content"
-          id="panel1d-header"
-        >
-          <div>
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1d-content"
+            id="panel1d-header"
+          >
             <Typography variant={'h5'} style={{ marginLeft: '0px' }}>
-              Объекты размещения
+              Месторасположение
             </Typography>
-            <Typography
-              color={theme.palette.text.secondary}
-              style={{ marginLeft: '0px' }}
-            >
-              Отметьте интересующие типы объектов размещения и укажите их
-              соотношение
+          </AccordionSummary>
+          <AccordionDetails style={{ padding: '0' }}>
+            <div style={{ height: '20px' }}></div>
+            <Typography color={theme.palette.text.secondary}>
+              Административный округ
             </Typography>
-          </div>
-        </AccordionSummary>
 
-        <AccordionDetails style={{ padding: '0' }}>
-          <div style={{ height: '20px' }}></div>
-          <Typography color={theme.palette.text.secondary}>
-            Алгоритм расчета
-          </Typography>
+            <div style={{ height: '4px' }}></div>
 
-          <div style={{ height: '4px' }}></div>
-
-          <FormControl sx={{ width: '100%' }}>
-            <InputLabel
-              sx={inputLabelStyles}
-              shrink={false}
-              id="demo-multiple-chip-label1"
-            >
-              {!selected && 'Выберите модель для расчета'}
-            </InputLabel>
             <Select
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
@@ -438,10 +193,8 @@ export const Filters = () => {
               fullWidth={true}
               sx={selectStyles}
               value={personName}
-              label={'Age'}
-              placeholder={'skj'}
               onChange={handleChange1}
-              input={<OutlinedInput label="Name" />}
+              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                   {selected.map((value) => (
@@ -461,63 +214,363 @@ export const Filters = () => {
                 </MenuItem>
               ))}
             </Select>
-          </FormControl>
 
-          <div style={{ height: '16px' }}></div>
+            <div style={{ height: '16px' }}></div>
 
-          <Typography color={theme.palette.text.secondary}>Район</Typography>
+            <Typography color={theme.palette.text.secondary}>Район</Typography>
 
-          <div style={{ height: '4px' }}></div>
+            <div style={{ height: '4px' }}></div>
 
-          <Select
-            labelId="demo-multiple-chip-label"
-            id="demo-multiple-chip"
-            multiple={true}
-            InputLabelProps={{ shrink: false }}
-            fullWidth={true}
-            sx={selectStyles}
-            value={personName}
-            onChange={handleChange1}
-            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-            renderValue={(selected) => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-            MenuProps={MenuProps}
-          >
-            {names.map((name) => (
-              <MenuItem
-                key={name}
-                value={name}
-                style={getStyles(name, personName, theme)}
-              >
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
+            <Select
+              labelId="demo-multiple-chip-label"
+              id="demo-multiple-chip"
+              multiple={true}
+              InputLabelProps={{ shrink: false }}
+              fullWidth={true}
+              sx={selectStyles}
+              value={personName}
+              onChange={handleChange1}
+              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
+            >
+              {names.map((name) => (
+                <MenuItem
+                  key={name}
+                  value={name}
+                  style={getStyles(name, personName, theme)}
+                >
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
 
-          <div style={{ height: '16px' }}></div>
+            {/*<TextField fullWidth label="fullWidth" id="fullWidth" />*/}
+          </AccordionDetails>
+        </Accordion>
 
-          <Typography color={theme.palette.text.secondary}>
-            Количество постаматов
-          </Typography>
-
-          <OutlinedInput
-            sx={selectStyles}
-            id="filled-number"
-            label="Number"
-            type="number"
-            InputLabelProps={{
-              shrink: false,
+        <div style={{ marginTop: '16px' }}></div>
+        {/*------------------------------------------------------------------------------------------*/}
+        <Accordion
+          disableGutters={true}
+          style={{
+            border: 'none',
+            boxShadow: 'none',
+            marginTop: '0px',
+            background: 'none',
+            width: '100%',
+          }}
+          defaultExpanded={true}
+          expanded={expanded === 'panel2'}
+          onChange={handleChange('panel2')}
+          elevation={0}
+          sx={{
+            '&.MuiAccordion-root:before': {
+              backgroundColor: 'transparent',
+            },
+          }}
+        >
+          <AccordionSummary
+            style={{
+              padding: '0',
+              paddingBottom: '16px',
+              borderBottom: 'solid 1px ' + theme.palette.divider,
             }}
-          />
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1d-content"
+            id="panel1d-header"
+          >
+            <Typography variant={'h5'} style={{ marginLeft: '0px' }}>
+              Расчет
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails style={{ padding: '0' }}>
+            <div style={{ height: '20px' }}></div>
+            <Typography color={theme.palette.text.secondary}>
+              Алгоритм расчета
+            </Typography>
 
-          {/*<TextField fullWidth label="fullWidth" id="fullWidth" />*/}
-        </AccordionDetails>
-      </Accordion>
+            <div style={{ height: '4px' }}></div>
+
+            <FormControl sx={{ width: '100%' }}>
+              <InputLabel
+                sx={inputLabelStyles}
+                shrink={false}
+                id="demo-multiple-chip-label1"
+              >
+                {!selected && 'Выберите модель для расчета'}
+              </InputLabel>
+              <Select
+                labelId="demo-multiple-chip-label"
+                id="demo-multiple-chip"
+                multiple={true}
+                InputLabelProps={{ shrink: false }}
+                fullWidth={true}
+                sx={selectStyles}
+                value={personName}
+                label={'Age'}
+                placeholder={'skj'}
+                onChange={handleChange1}
+                input={<OutlinedInput label="Name" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+                MenuProps={MenuProps}
+              >
+                {names.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={getStyles(name, personName, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <div style={{ height: '16px' }}></div>
+
+            <Typography color={theme.palette.text.secondary}>Район</Typography>
+
+            <div style={{ height: '4px' }}></div>
+
+            <Select
+              labelId="demo-multiple-chip-label"
+              id="demo-multiple-chip"
+              multiple={true}
+              InputLabelProps={{ shrink: false }}
+              fullWidth={true}
+              sx={selectStyles}
+              value={personName}
+              onChange={handleChange1}
+              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
+            >
+              {names.map((name) => (
+                <MenuItem
+                  key={name}
+                  value={name}
+                  style={getStyles(name, personName, theme)}
+                >
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+
+            <div style={{ height: '16px' }}></div>
+
+            <Typography color={theme.palette.text.secondary}>
+              Количество постаматов
+            </Typography>
+
+            <OutlinedInput
+              sx={selectStyles}
+              id="filled-number"
+              label="Number"
+              type="number"
+              InputLabelProps={{
+                shrink: false,
+              }}
+            />
+
+            {/*<TextField fullWidth label="fullWidth" id="fullWidth" />*/}
+          </AccordionDetails>
+        </Accordion>
+        <div style={{ marginTop: '16px' }}></div>
+        <Accordion
+          disableGutters={true}
+          style={{
+            border: 'none',
+            boxShadow: 'none',
+            marginTop: '0px',
+            background: 'none',
+            width: '100%',
+          }}
+          defaultExpanded={true}
+          expanded={expanded === 'panel2'}
+          onChange={handleChange('panel2')}
+          elevation={0}
+          sx={{
+            '&.MuiAccordion-root:before': {
+              backgroundColor: 'transparent',
+            },
+          }}
+        >
+          <AccordionSummary
+            style={{
+              padding: '0',
+              paddingBottom: '16px',
+              borderBottom: 'solid 1px ' + theme.palette.divider,
+            }}
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1d-content"
+            id="panel1d-header"
+          >
+            <div>
+              <Typography variant={'h5'} style={{ marginLeft: '0px' }}>
+                Объекты размещения
+              </Typography>
+              <Typography
+                color={theme.palette.text.secondary}
+                style={{ marginLeft: '0px' }}
+              >
+                Отметьте интересующие типы объектов размещения и укажите их
+                соотношение
+              </Typography>
+            </div>
+          </AccordionSummary>
+
+          <AccordionDetails style={{ padding: '0' }}>
+            <div style={{ height: '20px' }}></div>
+            <Typography color={theme.palette.text.secondary}>
+              Алгоритм расчета
+            </Typography>
+
+            <div style={{ height: '4px' }}></div>
+
+            <FormControl sx={{ width: '100%' }}>
+              <InputLabel
+                sx={inputLabelStyles}
+                shrink={false}
+                id="demo-multiple-chip-label1"
+              >
+                {!selected && 'Выберите модель для расчета'}
+              </InputLabel>
+              <Select
+                labelId="demo-multiple-chip-label"
+                id="demo-multiple-chip"
+                multiple={true}
+                InputLabelProps={{ shrink: false }}
+                fullWidth={true}
+                sx={selectStyles}
+                value={personName}
+                label={'Age'}
+                placeholder={'skj'}
+                onChange={handleChange1}
+                input={<OutlinedInput label="Name" />}
+                renderValue={(selected) => (
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip key={value} label={value} />
+                    ))}
+                  </Box>
+                )}
+                MenuProps={MenuProps}
+              >
+                {names.map((name) => (
+                  <MenuItem
+                    key={name}
+                    value={name}
+                    style={getStyles(name, personName, theme)}
+                  >
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <div style={{ height: '16px' }}></div>
+
+            <Typography color={theme.palette.text.secondary}>Район</Typography>
+
+            <div style={{ height: '4px' }}></div>
+
+            <Select
+              labelId="demo-multiple-chip-label"
+              id="demo-multiple-chip"
+              multiple={true}
+              InputLabelProps={{ shrink: false }}
+              fullWidth={true}
+              sx={selectStyles}
+              value={personName}
+              onChange={handleChange1}
+              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
+            >
+              {names.map((name) => (
+                <MenuItem
+                  key={name}
+                  value={name}
+                  style={getStyles(name, personName, theme)}
+                >
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+
+            <div style={{ height: '16px' }}></div>
+
+            <Typography color={theme.palette.text.secondary}>
+              Количество постаматов
+            </Typography>
+
+            <OutlinedInput
+              sx={selectStyles}
+              id="filled-number"
+              label="Number"
+              type="number"
+              InputLabelProps={{
+                shrink: false,
+              }}
+            />
+
+            {/*<TextField fullWidth label="fullWidth" id="fullWidth" />*/}
+          </AccordionDetails>
+        </Accordion>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexFlow: 'column nowrap',
+          gap: '24px',
+        }}
+      >
+        <Button
+          variant="contained"
+          sx={{
+            background: theme.palette.text.secondary,
+          }}
+          color="primary"
+          fullWidth={true}
+        >
+          Поиск
+        </Button>
+        <Button variant="outlined" color="secondary" fullWidth={true}>
+          Сбросить фильтр
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => setShowFilters((prev) => !prev)}
+          fullWidth={true}
+        >
+          Скрыть фильтр
+        </Button>
+      </Box>
     </Box>
   );
 };
