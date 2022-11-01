@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Map, Marker } from 'maplibre-gl';
-import get from "lodash/get"
+import get from 'lodash/get';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import { darkThemeMode } from '../App/App';
@@ -8,8 +8,8 @@ import { Filters } from '../../components/Filters';
 import './maps.css';
 import { MapControl } from './components/MapControl';
 import { PopupPlaceInfo } from '../../components/PopupPlaceInfo';
-import {getPostamats} from "../../api";
-import {getPostamatsForData} from "./util/getPostamats/getPostamats";
+import { getPostamats } from '../../api';
+import { getPostamatsForData } from './util/getPostamats/getPostamats';
 
 const myAPIKey = '3929778c687f40708c37d2155877714a';
 export const lightMapStyle = `https://maps.geoapify.com/v1/styles/positron/style.json?apiKey=${myAPIKey}`;
@@ -17,22 +17,21 @@ export const darkModeStyle = `https://maps.geoapify.com/v1/styles/dark-matter/st
 export const CHANGE_ZOOM_MIN = 'min';
 export const CHANGE_ZOOM_MAX = 'max';
 
-const MyMap = ({ handleTest, mode }) => {
-
+const MyMap = ({ handleTest, mode, showFilters, setShowFilters }) => {
   useEffect(() => {
     getPostamats()
-        .then(data => {
-          setLoading(false)
-          setPostamats(getPostamatsForData(get(data, 'data.points')))
-        })
-        .catch(() => {
-          setError("Ошибка получения постаматов")
-          setLoading(false)
-        })
-  }, [])
-  const [error,setError] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [postamats, setPostamats] = useState([])
+      .then((data) => {
+        setLoading(false);
+        setPostamats(getPostamatsForData(get(data, 'data.points')));
+      })
+      .catch(() => {
+        setError('Ошибка получения постаматов');
+        setLoading(false);
+      });
+  }, []);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [postamats, setPostamats] = useState([]);
   const mapContainer = useRef(null);
   const [map, setMap] = useState(null);
   const [selectedPlace, setSelectedPlace] = useState(null);
@@ -90,15 +89,33 @@ const MyMap = ({ handleTest, mode }) => {
   }, [map, postamats]);
   return (
     <div>
-      <Filters />
+      <Filters {...{ showFilters }} />
       <PopupPlaceInfo {...{ selectedPlace }} />
       <div
         className="map-container"
         style={{ width: '100vw', height: '100vh' }}
         ref={mapContainer}
       ></div>
-      {loading && <CircularProgress sx={{ zIndex: 1000, position: "absolute", top: '47%', left: "50%" }} color="error"/>}
-      {error && <Alert sx={{ zIndex: 1000, position: "absolute", top: '96px', right: "15px" }} severity="error"  onClose={() => setError(null)}>{error}</Alert>}
+      {loading && (
+        <CircularProgress
+          sx={{ zIndex: 1000, position: 'absolute', top: '47%', left: '50%' }}
+          color="error"
+        />
+      )}
+      {error && (
+        <Alert
+          sx={{
+            zIndex: 1000,
+            position: 'absolute',
+            top: '96px',
+            right: '15px',
+          }}
+          severity="error"
+          onClose={() => setError(null)}
+        >
+          {error}
+        </Alert>
+      )}
       <MapControl {...{ handleChangeZoom }} />
     </div>
   );

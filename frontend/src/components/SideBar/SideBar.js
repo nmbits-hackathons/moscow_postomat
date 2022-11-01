@@ -8,23 +8,27 @@ import ListItemButton from '@mui/material/ListItemButton';
 import Avatar from '@mui/material/Avatar';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import Logo from '../../assets/logo.png';
 import { ThemeMode } from '../ThemeMode';
 import {
-  ANALYTICS_PATH,
+  DOCUMENTS_PATH,
   FAVOURITES_PATH,
   MAIN_PATH,
   NEWS_PATH,
+  POSTAMATS_ANALYTICS_PATH,
+  POSTAMATS_LOGISTICS_PATH,
+  POSTAMATS_SETTINGS_PATH,
+  postamatsPath,
 } from '../../constants/path';
 
 export const SideBar = ({ handleChangeMode, mode }) => {
   const theme = useTheme();
-  let location = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
   const path = location.pathname;
   const handleNavigate = (path) => navigate(path);
@@ -134,7 +138,7 @@ export const SideBar = ({ handleChangeMode, mode }) => {
           />
         </ListItemButton>
         <ListItemButton
-          onClick={() => handleNavigate(ANALYTICS_PATH)}
+          onClick={() => handleNavigate(POSTAMATS_SETTINGS_PATH)}
           sx={{
             minHeight: 48,
             flexFlow: 'column',
@@ -142,7 +146,9 @@ export const SideBar = ({ handleChangeMode, mode }) => {
             justifyContent: 'center',
             boxSizing: 'border-box',
             marginBottom: '10px',
-            borderRight: path === ANALYTICS_PATH ? '3px solid red' : '',
+            borderRight: postamatsPath.some((el) => el === path)
+              ? '3px solid red'
+              : '',
           }}
         >
           <ListItemIcon
@@ -151,17 +157,52 @@ export const SideBar = ({ handleChangeMode, mode }) => {
               justifyContent: 'center',
             }}
           >
-            <TrendingUpIcon
+            <HomeRepairServiceIcon
               fontSize="large"
-              color={path === ANALYTICS_PATH ? 'error' : 'disabled'}
+              color={
+                postamatsPath.some((el) => el === path) ? 'error' : 'disabled'
+              }
             />
           </ListItemIcon>
           <ListItemText
-            primary={'Аналитика'}
+            primary={'Постаматы'}
+            sx={{
+              opacity: 1,
+              color: postamatsPath.some((el) => el === path)
+                ? theme.palette.text.primary
+                : theme.palette.text.secondary,
+            }}
+          />
+        </ListItemButton>
+        <ListItemButton
+          onClick={() => handleNavigate(DOCUMENTS_PATH)}
+          sx={{
+            minHeight: 48,
+            flexFlow: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxSizing: 'border-box',
+            marginBottom: '10px',
+            borderRight: path === DOCUMENTS_PATH ? '3px solid red' : '',
+          }}
+        >
+          <ListItemIcon
+            sx={{
+              minWidth: 0,
+              justifyContent: 'center',
+            }}
+          >
+            <ContentCopyIcon
+              fontSize="large"
+              color={path === DOCUMENTS_PATH ? 'error' : 'disabled'}
+            />
+          </ListItemIcon>
+          <ListItemText
+            primary={'Документы'}
             sx={{
               opacity: 1,
               color:
-                path === ANALYTICS_PATH
+                path === DOCUMENTS_PATH
                   ? theme.palette.text.primary
                   : theme.palette.text.secondary,
             }}
