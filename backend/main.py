@@ -16,17 +16,10 @@ description = """
 
 app = FastAPI(title="Moscow Postamat API",
               description=description,
-              version="1.0.3", docs_url="/", )
+              version="1.0.3", docs_url="/")
 
 origins = ["*"]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -233,7 +226,7 @@ test_points = {"points":
 }
 
 
-@app.post("/get_postamats/", tags=["тестовая ручка"])
+@app.post("/api/get_postamats/", tags=["тестовая ручка"])
 def test(filters: Filters):
     return test_points
 
