@@ -1,7 +1,8 @@
-import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import { useTheme } from '@mui/material/styles';
+import NewsImg from '../../../../assets/news.png';
 
-export const Analytics = () => {
+export const Settings = () => {
   const theme = useTheme();
 
   return (
@@ -16,7 +17,7 @@ export const Analytics = () => {
         width: '100%',
       }}
     >
-      Analytics
+      Settings
     </Box>
   );
 };

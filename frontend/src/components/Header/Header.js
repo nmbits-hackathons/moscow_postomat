@@ -4,8 +4,9 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
 import icon from '../../assets/upload.svg';
+import { useHeaderComponents } from './hooks/useHeaderComponents';
 
-export const Header = () => {
+export const Header = ({ showFilters, setShowFilters }) => {
   const theme = useTheme();
 
   return (
@@ -33,24 +34,7 @@ export const Header = () => {
           justifyContent: 'space-between',
         }}
       >
-        <div>
-          <Typography
-            variant={'h5'}
-            style={{
-              color: theme.palette.text.primary,
-            }}
-          >
-            2 323 232
-          </Typography>
-          <Typography
-            variant={'subtitle1'}
-            style={{
-              color: theme.palette.text.secondary,
-            }}
-          >
-            составит охват населения
-          </Typography>
-        </div>
+        <div>{useHeaderComponents({ ...{ showFilters, setShowFilters } })}</div>
         <div
           style={{
             display: 'flex',
