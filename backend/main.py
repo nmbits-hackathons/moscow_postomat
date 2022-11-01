@@ -233,7 +233,7 @@ test_points = {"points":
 }
 
 
-@app.post("/get_postomats/", tags=["тестовая ручка"])
+@app.post("/get_postamats/", tags=["тестовая ручка"])
 def test(filters: Filters):
     return test_points
 
