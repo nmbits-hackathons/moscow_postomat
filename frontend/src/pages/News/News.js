@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
-import NewsImg from '../../assets/upload.svg';
+import NewsImg from '../../assets/news.png';
 export const News = () => {
   const theme = useTheme();
 
@@ -18,7 +18,7 @@ export const News = () => {
         alt="news"
         src={NewsImg}
         style={{
-          objectFit: 'fill',
+          objectFit: 'contain',
           width: '100%',
           height: 'calc(100vh - 90px)',
           marginTop: `98px`,
