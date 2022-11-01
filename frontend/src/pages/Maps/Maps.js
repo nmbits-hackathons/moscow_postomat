@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Map, Marker } from 'maplibre-gl';
+import get from "lodash/get"
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import { darkThemeMode } from '../App/App';
@@ -21,9 +22,8 @@ const MyMap = ({ handleTest, mode }) => {
   useEffect(() => {
     getPostamats()
         .then(data => {
-          console.log(data)
           setLoading(false)
-          setPostamats(getPostamatsForData(data))
+          setPostamats(getPostamatsForData(get(data, 'data.points')))
         })
         .catch(() => {
           setError("Ошибка получения постаматов")
@@ -84,7 +84,7 @@ const MyMap = ({ handleTest, mode }) => {
         marker
           .getElement()
           .addEventListener('click', () => handleSelectedMarker(pos));
-        marker.setLngLat(pos).addTo(map);
+        marker.setLngLat(pos.coordinates.split(',').reverse()).addTo(map);
       });
     }
   }, [map, postamats]);

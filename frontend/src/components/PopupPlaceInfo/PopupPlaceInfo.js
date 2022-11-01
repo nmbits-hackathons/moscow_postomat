@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import get from 'lodash/get'
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -41,7 +42,7 @@ export const PopupPlaceInfo = ({ selectedPlace }) => {
             fontWeight: '900',
           }}
         >
-          Киоск печатной продукции
+            {get(selectedPlace, 'title')}
         </Typography>
         <IconButton
           size="large"
@@ -69,7 +70,7 @@ export const PopupPlaceInfo = ({ selectedPlace }) => {
             marginBottom: '2px',
           }}
         >
-          {selectedPlace?.join(' , ')}
+          {get(selectedPlace, 'coordinates')}
         </Typography>
         <Typography
           align="left"
@@ -78,7 +79,7 @@ export const PopupPlaceInfo = ({ selectedPlace }) => {
             fontWeight: '900',
           }}
         >
-          2-й Автозаводский проезд, 1/9
+            {get(selectedPlace, 'address_string')}
         </Typography>
       </Box>
       <Box
@@ -100,7 +101,7 @@ export const PopupPlaceInfo = ({ selectedPlace }) => {
               color: '#F62E46',
             }}
           >
-            8/10
+             {get(selectedPlace, 'indicator')}/10
           </Typography>
           <Typography
             align="left"
@@ -128,7 +129,7 @@ export const PopupPlaceInfo = ({ selectedPlace }) => {
               color: '#F62E46',
             }}
           >
-            234 567
+              {get(selectedPlace, 'square')}
           </Typography>
           <Typography
             align="left"
