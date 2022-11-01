@@ -1,1 +1,1 @@
-export * from './FullInfoForPlaceCard'
+export * from './FullInfoForPlaceCard';

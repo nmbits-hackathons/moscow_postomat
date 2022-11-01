@@ -1,1 +1,1 @@
-export * from './PopupPlaceInfo'
+export * from './PopupPlaceInfo';

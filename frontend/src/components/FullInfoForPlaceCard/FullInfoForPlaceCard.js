@@ -1,5 +1,3 @@
-
-
 export const FullInfoForPlaceCard = () => {
-    return <div>FullInfoForPlaceCard</div>
-}
+  return <div>FullInfoForPlaceCard</div>;
+};
