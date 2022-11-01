@@ -50,84 +50,22 @@ export const Filters = () => {
         setExpanded([...expandedCopy]);
     };
 
-    //===================================API=================================================================
-    const [region, setRegion] = useState([]);
-    const [district, setDistrict] = useState([]);
-    const [model, setModel] = useState([]);
-    const [nPostamats, setNPostamats] = useState(0);
-    const [isAutoCalc, setIsAutoCalc] = useState(true);
+    const [initialState, setInitialState] = useState({
+        kiosks: 0,
+        multifunctionalCenter: 0,
+        libraries: 0,
+        underground: 0,
+        houses: 0,
+        cultureHouses: 0,
+        sports: 0,
+        region: [],
+        district: [],
+        model: [],
+        nPostamats: 0,
+        isAutoCalc: true
+    })
 
-    console.log(region);
-
-    const [kiosks, setKiosks] = useState(0);
-    const [multifunctionalCenter, setMultifunctionalCenter] = useState(0);
-    const [libraries, setLibraries] = useState(0);
-    const [underground, setUnderground] = useState(0);
-    const [houses, setHouses] = useState(100);
-    const [cultureHouses, setCultureHouses] = useState(0);
-    const [sports, setSports] = useState(0);
-
-    //===================================END API=============================================================
-
-    const handleChangeKiosks = (event) => {
-        setKiosks(event.target.value);
-    }
-    const handleChangeMultifunctionalCenter = (event) => {
-        setMultifunctionalCenter(event.target.value);
-    }
-    const handleChangeLibraries = (event) => {
-        setLibraries(event.target.value);
-    }
-    const handleChangeUnderground = (event) => {
-        setUnderground(event.target.value);
-    }
-    const handleChangeHouses = (event) => {
-        setHouses(event.target.value);
-    }
-    const handleChangeCultureHouses = (event) => {
-        setCultureHouses(event.target.value);
-    }
-    const handleChangeSports = (event) => {
-        setSports(event.target.value);
-    }
-
-    const handleChangeRegion = (event) => {
-        const {
-            target: {value},
-        } = event;
-        setRegion(
-            typeof value === 'string' ? value.split(',') : value
-        );
-    };
-
-    const handleChangeAutoCalc= (event) => {
-        setIsAutoCalc(!isAutoCalc);
-    }
-
-    const handleChangeDistrict = (event) => {
-        const {
-            target: {value},
-        } = event;
-        setDistrict(
-            typeof value === 'string' ? value.split(',') : value
-        );
-    };
-
-    const handleChangeModel = (event) => {
-        const {
-            target: {value},
-        } = event;
-        setModel(
-            typeof value === 'string' ? value.split(',') : value
-        );
-
-    };
-
-    const handleChangeNPostamats = (event) => {
-        setNPostamats(event.target.value)
-    }
-
-    //-------------------------------------------------------------------
+    const handleChangeField = (key, value) => setInitialState(prev => ({...prev, [key]: value}))
 
     if (path !== '/') return;
 
@@ -161,6 +99,7 @@ export const Filters = () => {
             color: theme.palette.text.secondary,
         },
     };
+
     if (!showFilters) {
         return (
             <Button
@@ -186,15 +125,16 @@ export const Filters = () => {
                 top: '96px',
                 bottom: '12px',
                 display: 'flex',
-                width: '398px',
+                width: '415px',
                 margin: '0 10px 0 0',
                 background: theme.palette.background.default,
                 zIndex: 1000,
                 borderRadius: '20px',
-                padding: '20px 24px 24px 24px',
                 flexDirection: 'column',
                 overflowY: 'auto',
                 justifyContent: 'space-between',
+                padding: "5px 5px",
+                overflow: "hidden"
             }}
         >
             <Box
@@ -202,6 +142,11 @@ export const Filters = () => {
                     display: 'flex',
                     flexFlow: 'column nowrap',
                     gap: '24px',
+                    overflowY: "auto",
+                    overflowX: "hidden",
+                    width: "100%",
+                    padding: "10px 10px",
+                    boxSizing: "border-box"
                 }}
             >
                 <Accordion
@@ -248,8 +193,8 @@ export const Filters = () => {
                             InputLabelProps={{shrink: false}}
                             fullWidth={true}
                             sx={selectStyles}
-                            value={region}
-                            onChange={handleChangeRegion}
+                            value={initialState.region}
+                            onChange={(evt) => handleChangeField("region", evt.target.value)}
                             input={<OutlinedInput id="select-multiple-chip" label="Chip"/>}
                             renderValue={(selected) => (
                                 <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
@@ -264,7 +209,7 @@ export const Filters = () => {
                                 <MenuItem
                                     key={name}
                                     value={name}
-                                    style={getStyles(name, region, theme)}
+                                    style={getStyles(name, initialState.region, theme)}
                                 >
                                     {name}
                                 </MenuItem>
@@ -284,8 +229,8 @@ export const Filters = () => {
                             InputLabelProps={{shrink: false}}
                             fullWidth={true}
                             sx={selectStyles}
-                            value={district}
-                            onChange={handleChangeDistrict}
+                            value={initialState.district}
+                            onChange={(evt) => handleChangeField("district", evt.target.value)}
                             input={<OutlinedInput id="select-multiple-chip" label="Chip"/>}
                             renderValue={(selected) => (
                                 <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
@@ -300,7 +245,7 @@ export const Filters = () => {
                                 <MenuItem
                                     key={name}
                                     value={name}
-                                    style={getStyles(name, region, theme)}
+                                    style={getStyles(name, initialState.region, theme)}
                                 >
                                     {name}
                                 </MenuItem>
@@ -311,14 +256,13 @@ export const Filters = () => {
                     </AccordionDetails>
                 </Accordion>
 
-                <div style={{marginTop: '16px'}}></div>
                 {/*------------------------------------------------------------------------------------------*/}
                 <Accordion
                     disableGutters={true}
                     style={{
+                        marginTop: '16px',
                         border: 'none',
                         boxShadow: 'none',
-                        marginTop: '0px',
                         background: 'none',
                         width: '100%',
                     }}
@@ -369,10 +313,10 @@ export const Filters = () => {
                                 InputLabelProps={{shrink: false}}
                                 fullWidth={true}
                                 sx={selectStyles}
-                                value={model}
+                                value={initialState.model}
                                 label={'Age'}
                                 placeholder={'skj'}
-                                onChange={handleChangeModel}
+                                onChange={(evt) => handleChangeField("model", evt.target.value)}
                                 input={<OutlinedInput label="Name"/>}
                                 renderValue={(selected) => (
                                     <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
@@ -387,7 +331,7 @@ export const Filters = () => {
                                     <MenuItem
                                         key={name}
                                         value={name}
-                                        style={getStyles(name, region, theme)}
+                                        style={getStyles(name, initialState.region, theme)}
                                     >
                                         {name}
                                     </MenuItem>
@@ -406,10 +350,11 @@ export const Filters = () => {
                             id="filled-number"
                             label="Number"
                             type="number"
+                            value={initialState.nPostamats}
                             // InputLabelProps={{
                             //     shrink: false,
                             // }}
-                            onChange={handleChangeNPostamats}
+                            onChange={(evt) => handleChangeField("nPostamats", evt.target.value)}
                         />
 
                         {/*<TextField fullWidth label="fullWidth" id="fullWidth" />*/}
@@ -475,9 +420,9 @@ export const Filters = () => {
                                 </Typography>
                             </div>
                             <Checkbox
-                                onChange={handleChangeAutoCalc}
+                                onChange={() => handleChangeField("isAutoCalc", !initialState.isAutoCalc)}
                                 {...label}
-                                checked={isAutoCalc}
+                                checked={initialState.isAutoCalc}
                                 icon={<PanoramaFishEyeIcon/>}
                                 checkedIcon={<CircleIcon/>}
                             />
@@ -485,45 +430,45 @@ export const Filters = () => {
 
                         <div style={{alignItems: 'center', display:"flex", justifyContent: 'space-between', paddingTop: '28px', paddingBottom: '8px'}}>
                             <Typography>Киоски</Typography>
-                            <Switch onChange={(event) => setKiosks(event.target.checked ? 50 : 0)} checked={kiosks > 0} {...label}  />
+                            <Switch onChange={(event) => handleChangeField("kiosks", event.target.checked ? 50 : 0)} checked={initialState.kiosks > 0} {...label}  />
                         </div>
-                        {kiosks ? <Slider onChange={handleChangeKiosks} size={'small'} value={kiosks} aria-label="Default" valueLabelDisplay="auto" /> : null}
+                        {initialState.kiosks ? <Slider onChange={(evt) => handleChangeField("kiosks", evt.target.value)} size={'small'} value={initialState.kiosks} aria-label="Default" valueLabelDisplay="auto" /> : null}
 
                         <div style={{alignItems: 'center', display:"flex", justifyContent: 'space-between', paddingTop: '8px', paddingBottom: '8px'}}>
                             <Typography>МФЦ</Typography>
-                            <Switch onChange={(event) => setMultifunctionalCenter(event.target.checked ? 50 : 0)}checked={multifunctionalCenter > 0} {...label}  />
+                            <Switch onChange={(event) => handleChangeField("multifunctionalCenter", event.target.checked ? 50 : 0)} checked={initialState.multifunctionalCenter > 0} {...label}  />
                         </div>
-                        {multifunctionalCenter ? <Slider onChange={handleChangeMultifunctionalCenter} size={'small'} value={multifunctionalCenter} aria-label="Default" valueLabelDisplay="auto" /> : null}
+                        {initialState.multifunctionalCenter ? <Slider onChange={(evt) => handleChangeField("multifunctionalCenter", evt.target.value)} size={'small'} value={initialState.multifunctionalCenter} aria-label="Default" valueLabelDisplay="auto" /> : null}
 
                         <div style={{alignItems: 'center', display:"flex", justifyContent: 'space-between', paddingTop: '8px', paddingBottom: '8px'}}>
                             <Typography>Библиотеки</Typography>
-                            <Switch onChange={(event) => setLibraries(event.target.checked ? 50 : 0)}checked={libraries > 0} {...label}  />
+                            <Switch onChange={(event) => handleChangeField("multifunctionalCenter", event.target.checked ? 50 : 0)}checked={initialState.libraries > 0} {...label}  />
                         </div>
-                        {libraries ? <Slider onChange={handleChangeLibraries} size={'small'} value={libraries} aria-label="Default" valueLabelDisplay="auto" />: null}
+                        {initialState.libraries ? <Slider onChange={(evt) => handleChangeField("libraries", evt.target.value)} size={'small'} value={initialState.libraries} aria-label="Default" valueLabelDisplay="auto" />: null}
 
                         <div style={{alignItems: 'center', display:"flex", justifyContent: 'space-between', paddingTop: '8px', paddingBottom: '8px'}}>
                             <Typography>Дома культуры и клубы</Typography>
-                            <Switch onChange={(event) => setCultureHouses(event.target.checked ? 50 : 0)} {...label} checked={cultureHouses > 0}/>
+                            <Switch onChange={(event) => handleChangeField("cultureHouses", event.target.checked ? 50 : 0)} {...label} checked={initialState.cultureHouses > 0}/>
                         </div>
-                        {cultureHouses ? <Slider onChange={handleChangeCultureHouses} size={'small'} value={cultureHouses} aria-label="Default" valueLabelDisplay="auto" />: null}
+                        {initialState.cultureHouses ? <Slider onChange={(evt) => handleChangeField("cultureHouses", evt.target.value)} size={'small'} value={initialState.cultureHouses} aria-label="Default" valueLabelDisplay="auto" />: null}
 
                         <div style={{alignItems: 'center', display:"flex", justifyContent: 'space-between', paddingTop: '8px', paddingBottom: '8px'}}>
                             <Typography>Спортивные объекты</Typography>
-                            <Switch  onChange={(event) => setSports(event.target.checked ? 50 : 0)}{...label} checked={sports > 0} />
+                            <Switch  onChange={(event) => handleChangeField("sports", event.target.checked ? 50 : 0)}{...label} checked={initialState.sports > 0} />
                         </div>
-                        {sports ? <Slider onChange={handleChangeSports} size={'small'} value={sports} aria-label="Default" valueLabelDisplay="auto" /> : null}
+                        {initialState.sports ? <Slider onChange={(evt) => handleChangeField("sports", evt.target.value)} size={'small'} value={initialState.sports} aria-label="Default" valueLabelDisplay="auto" /> : null}
 
                         <div style={{alignItems: 'center', display:"flex", justifyContent: 'space-between', paddingTop: '8px', paddingBottom: '8px'}}>
                             <Typography>Многоквартирные дома</Typography>
-                            <Switch onChange={(event) => setHouses(event.target.checked ? 50 : 0)} {...label} checked={houses > 0} />
+                            <Switch onChange={(event) => handleChangeField("houses", event.target.checked ? 50 : 0)} {...label} checked={initialState.houses > 0} />
                         </div>
-                        {houses ? <Slider onChange={handleChangeHouses} size={'small'} value={houses} aria-label="Default" valueLabelDisplay="auto" /> : null}
+                        {initialState.houses ? <Slider onChange={(evt) => handleChangeField("houses", evt.target.value)} size={'small'} value={initialState.houses} aria-label="Default" valueLabelDisplay="auto" /> : null}
 
                         <div style={{alignItems: 'center', display:"flex", justifyContent: 'space-between', paddingTop: '8px', paddingBottom: '8px'}}>
                             <Typography>Метро, МЦК, МЦД</Typography>
-                            <Switch  {...label} onChange={(event) => setUnderground(event.target.checked ? 50 : 0)} checked={underground > 0}/>
+                            <Switch  {...label} onChange={(event) => handleChangeField("underground", event.target.checked ? 50 : 0)} checked={initialState.underground > 0}/>
                         </div>
-                        {underground ? <Slider onChange={handleChangeUnderground} size={'small'} value={underground} aria-label="Default" valueLabelDisplay="auto" /> : null}
+                        {initialState.underground ? <Slider onChange={(evt) => handleChangeField("underground", evt.target.value)} size={'small'} value={initialState.underground} aria-label="Default" valueLabelDisplay="auto" /> : null}
 
                     </AccordionDetails>
                 </Accordion>
@@ -534,6 +479,7 @@ export const Filters = () => {
                     display: 'flex',
                     flexFlow: 'column nowrap',
                     gap: '24px',
+                    padding: '20px 24px 24px 24px',
                 }}
             >
                 <Button
