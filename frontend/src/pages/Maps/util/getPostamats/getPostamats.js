@@ -1,9 +1,11 @@
-import pick from 'lodash/pick'
-import get from 'lodash/get'
+import pick from 'lodash/pick';
+import get from 'lodash/get';
 export const getPostamatsForData = (points) => {
-    return points
-        .map(el => ({ ...pick(el, ['id', 'title', 'description', 'indicator', 'square']), ...pick(get(el, 'placement'), ['coordinates', 'address_string'])}))
-}
+  return points.map((el) => ({
+    ...pick(el, ['id', 'title', 'description', 'indicator', 'square']),
+    ...pick(get(el, 'placement'), ['coordinates', 'address_string']),
+  }));
+};
 
 // {
 //     "id": 1,
