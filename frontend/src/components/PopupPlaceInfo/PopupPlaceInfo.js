@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import get from 'lodash/get'
+import get from 'lodash/get';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -42,7 +42,7 @@ export const PopupPlaceInfo = ({ selectedPlace }) => {
             fontWeight: '900',
           }}
         >
-            {get(selectedPlace, 'title')}
+          {get(selectedPlace, 'title')}
         </Typography>
         <IconButton
           size="large"
@@ -79,7 +79,7 @@ export const PopupPlaceInfo = ({ selectedPlace }) => {
             fontWeight: '900',
           }}
         >
-            {get(selectedPlace, 'address_string')}
+          {get(selectedPlace, 'address_string')}
         </Typography>
       </Box>
       <Box
@@ -101,7 +101,7 @@ export const PopupPlaceInfo = ({ selectedPlace }) => {
               color: '#F62E46',
             }}
           >
-             {get(selectedPlace, 'indicator')}/10
+            {get(selectedPlace, 'indicator')}/10
           </Typography>
           <Typography
             align="left"
@@ -129,7 +129,7 @@ export const PopupPlaceInfo = ({ selectedPlace }) => {
               color: '#F62E46',
             }}
           >
-              {get(selectedPlace, 'square')}
+            {get(selectedPlace, 'square')}
           </Typography>
           <Typography
             align="left"
