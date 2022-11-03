@@ -2,6 +2,7 @@ import json
 from fastapi import FastAPI, UploadFile
 import uvicorn
 from starlette.middleware.cors import CORSMiddleware
+from starlette.responses import FileResponse
 
 from models import Filters
 
@@ -226,9 +227,21 @@ test_points = {"points":
 }
 
 
-@app.post("/api/get_postamats/", tags=["тестовая ручка"])
+@app.post("/api/get_postamats/", tags=["postmats"], description="getting postamate sampling data")
 def test(filters: Filters):
     return test_points
+
+
+@app.get('/get_pdf_data/', tags=["export_files"], description="exporting data in pdf format")
+def get_docx():
+    file_path = "storage/data.pdf"
+    return FileResponse(media_type='application/octet-stream', filename="data.pdf", path=file_path)
+
+
+@app.get('/get_xlsx_data/', tags=["export_files"], description="exporting data in xlsx format")
+def get_docx():
+    file_path = "storage/data.xlsx"
+    return FileResponse(media_type='application/octet-stream', filename="data.xlsx", path=file_path)
 
 
 if __name__ == "__main__":
