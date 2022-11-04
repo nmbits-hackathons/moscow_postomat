@@ -17,7 +17,7 @@ export const darkModeStyle = `https://maps.geoapify.com/v1/styles/dark-matter/st
 export const CHANGE_ZOOM_MIN = 'min';
 export const CHANGE_ZOOM_MAX = 'max';
 
-const MyMap = ({ handleTest, mode, showFilters, setShowFilters }) => {
+const MyMap = ({ handleTest, mode, showFilters }) => {
   useEffect(() => {
     getPostamats()
       .then((data) => {
@@ -89,7 +89,7 @@ const MyMap = ({ handleTest, mode, showFilters, setShowFilters }) => {
   }, [map, postamats]);
   return (
     <div>
-      <Filters {...{ showFilters }} />
+      <Filters {...{ showFilters, setPostamats }} />
       <PopupPlaceInfo {...{ selectedPlace }} />
       <div
         className="map-container"
