@@ -11,6 +11,6 @@ def make_coverage(request):
         df = df.iloc[:, 1:]
         a = np.random.choice(200, size=50, replace=False)
         res = df.iloc[a, :].sort_values(by='Mark', ascending=False)
-        return res.to_json()
+        return res.to_json(orient='records')
     else:
         return pd.DataFrame().to_json()
