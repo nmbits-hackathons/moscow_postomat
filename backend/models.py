@@ -23,8 +23,8 @@ class Sector(BaseModel):  # возможные координаты сектор
 
 class Filters(BaseModel):  # характеристики транспорта
     places: Places
-    district: List[str]
-    region: List[str]
+    districts: List[str]
+    areas: List[str]
     model_keyword: str = "k-means"
     sector: Sector = None
 
