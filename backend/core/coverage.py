@@ -71,7 +71,7 @@ def filter_by_places(df, district_by_area):
 
 
 def make_coverage(request):
-<<<<<<< HEAD
+
     """
     Coverage creation according to user's settings.
     """
@@ -83,15 +83,4 @@ def make_coverage(request):
     # else:
     #     return pd.DataFrame().to_json()
     return make_result(data)
-=======
-    '''
-    '''
-    if request['places']['library'] > 0:
-        df = pd.read_csv('./datasets/math_model_result.csv')
-        df = df.iloc[:, 1:]
-        a = np.random.choice(200, size=50, replace=False)
-        res = df.iloc[a, :].sort_values(by='Mark', ascending=False)
-        return res.to_json(orient='records')
-    else:
-        return pd.DataFrame().to_json()
->>>>>>> 68eb41285fbca5e761eac077c38146c365553236
+
