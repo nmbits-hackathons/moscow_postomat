@@ -1,8 +1,8 @@
 import numpy as np 
 import pandas as pd
 import json
-from administrative_divisions import adm_areas, adm_districts
-from model_datasets import model_results
+from core.administrative_divisions import adm_areas, adm_districts
+from core.model_datasets import model_results
 
 
 def make_result(df):
