@@ -1,4 +1,5 @@
 import instance from '../axios';
+import { GET_POSTAMATS } from '../path';
 
 const mockFilters = {
   places: {
@@ -26,5 +27,5 @@ const mockFilters = {
 };
 
 export const getPostamats = (filters = mockFilters) => {
-  return instance.post('/get_postamats/', filters);
+  return instance.post(GET_POSTAMATS, filters);
 };
