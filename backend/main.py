@@ -3,6 +3,7 @@ from fastapi import FastAPI, UploadFile
 import uvicorn
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
+from core.coverage import make_coverage
 
 from models import Filters
 
@@ -79,6 +80,7 @@ test_points = {"points":
                 "region": "test",  # Административный округ
                 "district": "test",  # Район
                 "coordinates": "55.7984977,37.5207235",
+                "radius" : 5,
                 "address_string": "пер. Чапаевский, д. 3, Москва"
             },
             "square": 256740.60,  # площадь помещения float
@@ -86,7 +88,7 @@ test_points = {"points":
             "number of floors": 57,  # этажи
             "number of entrances": 14,  # количество подъездов
             "number_of_apartments": 992,  # количество подъездов
-
+            "coverage" : 239
         },
         {
             "id": 4,
@@ -227,6 +229,14 @@ test_points = {"points":
 }
 
 
+
+test_points1 = {
+    [
+
+    ]
+}
+
+
 @app.post("/api/get_postamats/", tags=["postmats"], description="getting postamate sampling data")
 def test(filters: Filters):
     return test_points
@@ -242,6 +252,14 @@ def get_docx():
 def get_docx():
     file_path = "storage/data.xlsx"
     return FileResponse(media_type='application/octet-stream', filename="data.xlsx", path=file_path)
+
+
+@app.post('/test/', tags=["test"], description="test")
+def get_test(filters: Filters):
+    result = make_coverage(filters.dict())
+    print(result)
+    return result
+
 
 
 if __name__ == "__main__":
