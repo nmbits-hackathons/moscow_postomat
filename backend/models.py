@@ -27,6 +27,8 @@ class Filters(BaseModel):  # характеристики транспорта
     areas: List[str]
     model_keyword: str = "k-means"
     sector: Sector = None
+    postamat_count: int
+    coverage : int
 
     class Config:
         orm_mode = True
