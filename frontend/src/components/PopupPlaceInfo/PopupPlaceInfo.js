@@ -6,9 +6,15 @@ import IconButton from '@mui/material/IconButton';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useTheme } from '@mui/material/styles';
+import { PostamatsFullInfoCard } from '../PostamatsFullInfoCard';
+import { useEffect, useState } from 'react';
 
 export const PopupPlaceInfo = ({ selectedPlace }) => {
   const theme = useTheme();
+  const [fullInfoCardOpen, setFullInfoCardOpen] = useState(null);
+  useEffect(() => {
+    setFullInfoCardOpen(null);
+  }, [selectedPlace]);
   if (!selectedPlace) return null;
   return (
     <Box
@@ -28,6 +34,7 @@ export const PopupPlaceInfo = ({ selectedPlace }) => {
         gap: '10px',
       }}
     >
+      <PostamatsFullInfoCard {...{ fullInfoCardOpen, setFullInfoCardOpen }} />
       <Box
         sx={{
           display: 'flex',
@@ -165,6 +172,7 @@ export const PopupPlaceInfo = ({ selectedPlace }) => {
         </IconButton>
         <Button
           fullWidth={true}
+          onClick={() => setFullInfoCardOpen(selectedPlace)}
           sx={{
             background: theme.palette.action.hover,
             borderRadius: '12px',

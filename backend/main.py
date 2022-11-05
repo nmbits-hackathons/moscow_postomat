@@ -242,14 +242,14 @@ def test(filters: Filters):
     return test_points
 
 
-@app.get('/get_pdf_data/', tags=["export_files"], description="exporting data in pdf format")
-def get_docx():
+@app.get('/api/get_pdf_data/', tags=["export_files"], description="exporting data in pdf format")
+def get_data1():
     file_path = "storage/data.pdf"
     return FileResponse(media_type='application/octet-stream', filename="data.pdf", path=file_path)
 
 
-@app.get('/get_xlsx_data/', tags=["export_files"], description="exporting data in xlsx format")
-def get_docx():
+@app.get('/api/get_xlsx_data/', tags=["export_files"], description="exporting data in xlsx format")
+def get_data2():
     file_path = "storage/data.xlsx"
     return FileResponse(media_type='application/octet-stream', filename="data.xlsx", path=file_path)
 

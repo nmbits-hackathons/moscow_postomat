@@ -1,4 +1,3 @@
-import { useLocation, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
@@ -16,18 +15,17 @@ import {
   Slider,
 } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import {
-  ITEM_HEIGHT,
-  ITEM_PADDING_TOP,
-  MenuProps,
-  names,
-} from './Filters.constants';
+import { MenuProps, names } from './Filters.constants';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import CircleIcon from '@mui/icons-material/Circle';
 import Switch from '@mui/material/Switch';
+import { getPostamats } from '../../api';
+import { getPostamatsForData } from '../../pages/Maps/util/getPostamats/getPostamats';
+import get from 'lodash/get';
+import { getStateForPostamatsRequest } from './utils/getStateForPostamatsRequest';
+import Alert from '@mui/material/Alert';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -40,17 +38,16 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export const Filters = ({ showFilters }) => {
+export const Filters = ({ showFilters, setPostamats }) => {
   const theme = useTheme();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const path = location.pathname;
   const [expanded, setExpanded] = useState([false, true, true]);
   const handleChange = (panel, index) => (event, isExpanded) => {
     let expandedCopy = expanded;
     expandedCopy[index] = !isExpanded;
     setExpanded([...expandedCopy]);
   };
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const [initialState, setInitialState] = useState({
     kiosks: 0,
@@ -67,6 +64,17 @@ export const Filters = ({ showFilters }) => {
     isAutoCalc: true,
   });
 
+  const handleSearchPostamats = () => {
+    getPostamats(getStateForPostamatsRequest(initialState))
+      .then((data) => {
+        setLoading(false);
+        setPostamats(getPostamatsForData(get(data, 'data.points')));
+      })
+      .catch(() => {
+        setError('Ошибка получения постаматов');
+        setLoading(false);
+      });
+  };
   const handleChangeField = (key, value) =>
     setInitialState((prev) => ({ ...prev, [key]: value }));
 
@@ -657,6 +665,8 @@ export const Filters = ({ showFilters }) => {
           }}
           color="primary"
           fullWidth={true}
+          onClick={() => handleSearchPostamats()}
+          disabled={loading}
         >
           Поиск
         </Button>
@@ -664,6 +674,20 @@ export const Filters = ({ showFilters }) => {
           Сбросить фильтр
         </Button>
       </Box>
+      {error && (
+        <Alert
+          sx={{
+            zIndex: 1000,
+            position: 'absolute',
+            top: '96px',
+            right: '15px',
+          }}
+          severity="error"
+          onClose={() => setError(null)}
+        >
+          {error}
+        </Alert>
+      )}
     </Box>
   );
 };
