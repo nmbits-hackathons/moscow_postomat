@@ -5,10 +5,27 @@ import Box from '@mui/material/Box';
 import { Button } from '@mui/material';
 import icon from '../../assets/upload.svg';
 import { useHeaderComponents } from './hooks/useHeaderComponents';
+import { GET_PDF_FILE, GET_XLSX_FILE } from '../../api/path';
 
 export const Header = ({ showFilters, setShowFilters }) => {
   const theme = useTheme();
-
+  const handleGetPDFFile = () => {
+    const link = document.createElement('a');
+    link.href = GET_PDF_FILE;
+    link.download = 'SamplePDF.pdf';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+  };
+  const handleGetXLSXFile = () => {
+    const link = document.createElement('a');
+    link.href = GET_XLSX_FILE;
+    link.setAttribute('download', `FileName.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
+  };
   return (
     <Box
       sx={{
@@ -41,6 +58,7 @@ export const Header = ({ showFilters, setShowFilters }) => {
           }}
         >
           <Button
+            onClick={() => handleGetXLSXFile()}
             style={{
               borderRadius: '12px',
               padding: '16px 32px',
@@ -61,6 +79,7 @@ export const Header = ({ showFilters, setShowFilters }) => {
           </Button>
 
           <Button
+            onClick={() => handleGetPDFFile()}
             style={{
               borderRadius: '12px',
               padding: '16px 32px',

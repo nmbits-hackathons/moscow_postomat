@@ -2,7 +2,17 @@ import pick from 'lodash/pick';
 import get from 'lodash/get';
 export const getPostamatsForData = (points) => {
   return points.map((el) => ({
-    ...pick(el, ['id', 'title', 'description', 'indicator', 'square']),
+    ...pick(el, [
+      'id',
+      'title',
+      'description',
+      'indicator',
+      'square',
+      'year',
+      'number_of_apartments',
+      'number of entrances',
+      'number of floors',
+    ]),
     ...pick(get(el, 'placement'), ['coordinates', 'address_string']),
   }));
 };
