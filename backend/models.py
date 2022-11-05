@@ -15,11 +15,6 @@ class Places(BaseModel):
     house: float  # многоквартирные дома
 
 
-class Placement(BaseModel):
-    district: str
-    region: str
-
-
 class Sector(BaseModel):  # возможные координаты сектора по которому мы ищем
     active: bool = False
     coordinates: str
@@ -28,7 +23,8 @@ class Sector(BaseModel):  # возможные координаты сектор
 
 class Filters(BaseModel):  # характеристики транспорта
     places: Places
-    placement: List[Placement]
+    district: List[str]
+    region: List[str]
     model_keyword: str = "k-means"
     sector: Sector = None
 
