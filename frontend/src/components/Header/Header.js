@@ -61,7 +61,7 @@ export const Header = ({ showFilters, setShowFilters }) => {
             onClick={() => handleGetXLSXFile()}
             style={{
               borderRadius: '12px',
-              padding: '16px 32px',
+              padding: '12px 24px',
               backgroundColor: theme.palette.action.selected,
               boxShadow: 'none',
               marginRight: '8px',
@@ -71,7 +71,7 @@ export const Header = ({ showFilters, setShowFilters }) => {
             <img alt="icon XSLX" src={icon} />
             <div style={{ padding: '8px' }}></div>
             <Typography
-              variant={'h6'}
+              // variant={'h6'}
               style={{ color: theme.palette.text.secondary }}
             >
               XSLX
@@ -82,7 +82,7 @@ export const Header = ({ showFilters, setShowFilters }) => {
             onClick={() => handleGetPDFFile()}
             style={{
               borderRadius: '12px',
-              padding: '16px 32px',
+              padding: '12px 24px',
               backgroundColor: theme.palette.action.selected,
               boxShadow: 'none',
             }}
@@ -91,7 +91,7 @@ export const Header = ({ showFilters, setShowFilters }) => {
             <img alt="icon PDF" src={icon} />
             <div style={{ padding: '8px' }}></div>
             <Typography
-              variant={'h6'}
+              // variant={'h6'}
               style={{ color: theme.palette.text.secondary }}
             >
               PDF

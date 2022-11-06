@@ -670,6 +670,7 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
           variant="contained"
           sx={{
             background: theme.palette.text.secondary,
+              borderRadius: '12px'
           }}
           color="primary"
           fullWidth={true}
@@ -677,7 +678,9 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
         >
           Поиск
         </Button>
-        <Button variant="outlined" color="secondary" fullWidth={true}>
+        <Button variant="outlined" color="primary" sx={{
+            borderRadius: '12px'
+        }} fullWidth={true}>
           Сбросить фильтр
         </Button>
       </Box>

@@ -101,7 +101,8 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
 
   useEffect(() => {
     if (map) {
-      postamats.forEach((pos) => {
+      let ps = postamats
+      ps.forEach((pos) => {
         const marker = new Marker({
           color: 'red',
         });
@@ -111,19 +112,18 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
         marker.setLngLat(pos.coordinates.split(',').reverse()).addTo(map);
         setMarkers([...markers, marker]);
       });
-
       map.on('load', function () {
-        postamats.forEach((el) => {
-          map.addSource(`maine-${el.id}`, {
+        ps.forEach((el, index) => {
+          map.addSource(`maine-${index}`, {
             type: 'geojson',
             data: {
               type: 'FeatureCollection',
               features: [
                 {
-                  weight: 1,
+                  weight: 0 + el.indicator,
                   properties: {
                     population: 1,
-                    weight: 1,
+                    weight: el.indicator,
                   },
                   type: 'Feature',
                   geometry: {
@@ -141,9 +141,9 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
             },
           });
           map.addLayer({
-            id: `maine-${el.id}`,
+            id: `maine-${index}`,
             type: 'fill',
-            source: `maine-${el.id}`,
+            source: `maine-${index}`,
             layout: {},
             paint: {
               'fill-color': [
@@ -159,9 +159,17 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
                     'interpolate',
                     ['linear'],
                     ['var', 'density'],
-                    2,
-                    ['to-color', 'rgba(255,0,0,0.15)'],
-                    5,
+                    9.96,
+                    ['to-color', 'rgba(157,157,157,0.74)'],
+                    9.97,
+                    ['to-color', 'rgba(255,171,185,0.58)'],
+                    9.98,
+                    ['to-color', 'rgba(255,99,125,0.44)'],
+                    9.99,
+                    ['to-color', 'rgba(211,8,52,0.66)'],
+                    9.995,
+                    ['to-color', 'rgba(253,26,65,0.67)'],
+                    9.999,
                     ['to-color', '#fd1a41'],
                   ],
                 ],
