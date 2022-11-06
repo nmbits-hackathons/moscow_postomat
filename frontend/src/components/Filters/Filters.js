@@ -678,7 +678,7 @@ export const Filters = ({ showFilters, setPostamats }) => {
         <Alert
           sx={{
             zIndex: 1000,
-            position: 'absolute',
+            position: 'fixed',
             top: '96px',
             right: '15px',
           }}

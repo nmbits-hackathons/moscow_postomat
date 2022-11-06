@@ -10,17 +10,15 @@ export const getStateForPostamatsRequest = (state) => {
       underground: state.underground,
       house: state.houses,
     },
-    placement: [
-      {
-        district: state.district[0] || '',
-        region: state.region[0] || '',
-      },
-    ],
+    districts: ['string'],
+    areas: ['string'],
     model_keyword: 'k-means',
     sector: {
       active: false,
       coordinates: 'string',
       radius: 0,
     },
+    postamat_count: 0,
+    coverage: 0
   };
 };

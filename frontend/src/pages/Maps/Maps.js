@@ -18,15 +18,18 @@ export const CHANGE_ZOOM_MIN = 'min';
 export const CHANGE_ZOOM_MAX = 'max';
 
 function hexagon(x, y, km) {
+    console.log(km)
     let r = km / 110;
     let arr = []
     console.log('start')
     for (let i = 0; i < 6; i++) {
-        arr.push([x + r * Math.cos(i * Math.PI / 3), y + r / 2 * Math.sin(i * Math.PI / 3)]);
-        console.log(Math.sin(i * Math.PI / 3))
+        const x1 = +x + r * Math.cos(i * Math.PI / 3)
+        const x2 =  +y + r / 2 * Math.sin(i * Math.PI / 3)
+        arr.push([x1, x2]);
+        // console.log(Math.sin(i * Math.PI / 3))
     }
 
-    // console.log(arr)
+    console.log(arr)
     return arr
 }
 
@@ -86,61 +89,6 @@ const MyMap = ({handleTest, mode, showFilters}) => {
         handleTest(map);
         setMap(map);
 
-        map.on('load', function () {
-            map.addSource('maine', {
-                type: 'geojson',
-                data: {
-                    type: 'FeatureCollection',
-                    features: [
-                        {
-                            "weight": 1,
-                            "properties": {
-                                "population": 1,
-                                "weight": 1
-                            },
-                            type: 'Feature',
-                            geometry: {
-                                type: 'Polygon',
-                                coordinates: [
-                                    hexagon(37.514230, 55.833302, 0.6)
-                                ]
-                            }
-                        },
-                    ]
-                }
-            });
-
-            map.addLayer({
-                'id': 'maine',
-                'type': 'fill',
-                'source': 'maine',
-                'layout': {},
-                'paint': {
-                    'fill-color': [
-                        'let',
-                        'density',
-                        ['get', 'weight'],
-                        [
-                            'interpolate',
-                            ['linear'],
-                            ['zoom'],
-                            4,
-                            [
-                                'interpolate',
-                                ['linear'],
-                                ['var', 'density'],
-                                2,
-                                ['to-color', 'rgba(255,0,0,0.15)'],
-                                5,
-                                ['to-color', '#fd1a41']
-                            ]
-                        ]
-                    ],
-                    'fill-opacity': 0.7
-                }
-            });
-        });
-
         map.on('click', 'maine', function (e) {
             new Map
                 .setLngLat(e.lngLat)
@@ -160,6 +108,66 @@ const MyMap = ({handleTest, mode, showFilters}) => {
                     .getElement()
                     .addEventListener('click', () => handleSelectedMarker(pos));
                 marker.setLngLat(pos.coordinates.split(',').reverse()).addTo(map);
+            });
+
+            map.on('load', function () {
+                postamats.forEach(el => {
+                    map.addSource(`maine-${el.id}`, {
+                        type: 'geojson',
+                        data: {
+                            type: 'FeatureCollection',
+                            features: [
+                                {
+                                    "weight": 1,
+                                    "properties": {
+                                        "population": 1,
+                                        "weight": 1
+                                    },
+                                    type: 'Feature',
+                                    geometry: {
+                                        type: 'Polygon',
+                                        coordinates: [
+                                            hexagon(el.coordinates.split(',').reverse()[0], el.coordinates.split(',').reverse()[1], 0.6)
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    })
+                    map.addLayer({
+                        'id': `maine-${el.id}`,
+                        'type': 'fill',
+                        'source': `maine-${el.id}`,
+                        'layout': {},
+                        'paint': {
+                            'fill-color': [
+                                'let',
+                                'density',
+                                ['get', 'weight'],
+                                [
+                                    'interpolate',
+                                    ['linear'],
+                                    ['zoom'],
+                                    4,
+                                    [
+                                        'interpolate',
+                                        ['linear'],
+                                        ['var', 'density'],
+                                        2,
+                                        ['to-color', 'rgba(255,0,0,0.15)'],
+                                        5,
+                                        ['to-color', '#fd1a41']
+                                    ]
+                                ]
+                            ],
+                            'fill-opacity': 0.7
+                        }
+                    });
+
+                })
+
+
+
             });
         }
     }, [map, postamats]);
