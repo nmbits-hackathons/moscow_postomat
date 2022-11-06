@@ -18,22 +18,25 @@ export const getPostamatsForData = (points) => {
 };
 
 // {
-//   "id": 1,
-//     "title": "test",
-//     "description": "str - optional",
-//     "type": "theatre",
-//     "indicator": 9.3,
+//   "title": null,
+//     "description": "Многоквартирный жилой дом",
+//     "type": "house",
+//     "square": 4474.4,
+//     "year": 1967,
+//     "number_of_floors": 12,
+//     "number_of_entrances": null,
+//     "number_of_apartments": 109,
+//     "coverage": 327,
+//     "pvz_cnt": 3,
+//     "station_cnt": 0,
+//     "station_dist": 5,
+//     "dist_to_center": 14.41180452,
+//     "passenger_flow": -0.512940384,
+//     "indicator": 9.999965157,
 //     "placement": {
-//   "region": "test",
-//       "district": "test",
-//       "radius": 0,
-//       "coordinates": "55.834472,37.65805",
-//       "address_string": "пр-кт. Мира, д. 188 Б, к. 1, Москва"
-// },
-//   "square": 54804.1,
-//     "year": 2014,
-//     "number of floors": 58,
-//     "number of entrances": 1,
-//     "number_of_apartments": 370,
-//     "coverage": 21
-// },
+//   "area": "Северный административный округ",
+//       "district": "Дегунино Западное",
+//       "radius": 0.4,
+//       "coordinates": "55.870814,37.529681",
+//       "address_string": "ул. Дегунинская, д. 30, Москва"
+// }

@@ -16,7 +16,7 @@ export const Logistics = () => {
         width: '100%',
       }}
     >
-      Logistics
+      Логистика. В разработке
     </Box>
   );
 };

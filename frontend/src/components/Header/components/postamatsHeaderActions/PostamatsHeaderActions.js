@@ -23,6 +23,7 @@ export const PostamatsHeaderActions = () => {
         onClick={() => handleNavigate(POSTAMATS_SETTINGS_PATH)}
         sx={{
           borderBottom: path === POSTAMATS_SETTINGS_PATH ? '3px solid red' : '',
+            marginRight: '16px',
         }}
       >
         Управление
@@ -33,6 +34,7 @@ export const PostamatsHeaderActions = () => {
         sx={{
           borderBottom:
             path === POSTAMATS_ANALYTICS_PATH ? '3px solid red' : '',
+            marginRight: '16px',
         }}
       >
         Аналитика

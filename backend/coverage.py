@@ -9,7 +9,6 @@ from core.model_datasets import model_results
 def get_df(model_name):
     """
     model_name: model type chosen by user
-
     return: dataframe with marks from a corresponding model
     """
     return pd.read_csv(model_results[model_name]).iloc[:, 1:]
@@ -19,7 +18,6 @@ def preprocess_placement_filters(areas, districts):
     """
     areas: administrative areas chosen by user 
     districts: administrative districts chosen by user 
-
     return: dict combining areas & districts
     {area #N: [corresponding districts]}
     """
@@ -40,7 +38,6 @@ def filter_by_placement(df, district_by_area):
     """
     df: dataframe with marks from some model
     district_by_area: districts & areas to select
-
     return: dataframe with zones only from district_by_area
     """
     filtered_df = pd.DataFrame()
@@ -59,7 +56,6 @@ def filter_by_placement(df, district_by_area):
 def get_proportions(places):
     """
     places: dict with user's preferences in zone types
-
     return: dict with non-zero proportions for each key
     """
     places_ = places.copy()
@@ -73,26 +69,13 @@ def filter_by_places(df, proportions):
     """
     df: dataframe with marks from some model
     proportions: dict with non-zero proportions for each key
-
     return: dataframe with zones only with selected types
     """
     if len(proportions) > 0:
         # user chose point types
         return df[df["type"].apply(lambda x: x in proportions.keys())]
     else:
-        return df
-
-
-def calculate_distance(ptA, ptB):
-    """
-    ptA: (lat, lon) of the first point
-    ptB: (lat, lon) of the second point
-    """
-    lat_diff = ptA[0] - ptB[0]
-    lon_diff = ptA[1] - ptB[1]
-    lat_dist = lat_diff * 111.37
-    lon_dist = lon_diff * np.cos(ptA[0] * np.pi / 180) * 111.37
-    return np.sqrt(lon_dist ** 2 + lat_dist ** 2)
+        return df    
 
 
 def remove_neighbours(df, new_point, radius=0.4):
@@ -100,15 +83,13 @@ def remove_neighbours(df, new_point, radius=0.4):
     df: left points for the coverage
     new_point: (lat, lon) of the last added point
     radius: radius in kilometers
-
     return: df without neighbour points to the given one
     """
-    lats = df["lat"]
-    lons = df["lon"]
-    res_idx = []
-    for point in zip(lats, lons):
-        res_idx.append(calculate_distance(point, new_point) > radius)
-    return df[res_idx]
+    lats = np.array(df["lat"])
+    lons = np.array(df["lon"])
+    lat_dist = (lats - new_point[0]) * 111.37
+    lon_dist = (lons - new_point[1]) * np.cos(new_point[0] * np.pi / 180) * 111.37
+    return df[np.sqrt(lon_dist ** 2 + lat_dist ** 2) > radius]
 
 
 def make_coverage(df, request, proportions):
@@ -120,6 +101,11 @@ def make_coverage(df, request, proportions):
     # coverage until fixed percent
     if request["coverage"] > 0:
         pass
+        # постамат -> set(дома)
+        # set(used дома)
+        # set(used) += дома нового постамата
+        # set(used) -- знаю число
+        # считаем diff(новые - used), для них – людей
     else:   # limited amount of postamates
         postamat_left = request["postamat_count"]
         # auto mode
@@ -157,8 +143,10 @@ def make_coverage(df, request, proportions):
             "address_string": row["address"]
         })
     res["placement"] = placements
-    res.drop(["area", "district", "lat", "lon", "address"], axis=1, inplace=True)
-
+    res.drop(["area", "district", "lat", "lon", "address",
+        "passenger_flow", "dist_to_center", "station_cnt", "pvz_cnt"], axis=1, inplace=True)
+    res["id"] = np.arange(len(res))
+    res["indicator"] = np.around(res["indicator"], 3)
     return res.to_json(force_ascii=False, orient="records")
 
 
