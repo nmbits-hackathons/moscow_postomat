@@ -25,7 +25,7 @@ class Filters(BaseModel):  # характеристики транспорта
     places: Places
     districts: List[str]
     areas: List[str]
-    model_keyword: str = "k-means"
+    model_keyword: str = "math_model"
     sector: Sector = None
     postamat_count: int
     coverage : int

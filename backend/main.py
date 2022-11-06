@@ -3,7 +3,7 @@ from fastapi import FastAPI, UploadFile
 import uvicorn
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
-from core.coverage import make_coverage
+from core.coverage import make_result
 
 from models import Filters
 
@@ -39,7 +39,7 @@ test_points = {"points":
             "type": "theatre",  # тип - кинотеатр, киоск или другое
             "indicator": 9.3,  # оценка места с точки зрения системы
             "placement": {
-                "region": "test",  # Административный округ
+                "area": "test",  # Административный округ
                 "district": "test",  # Район,
                 "radius": 0,
                 "coordinates": "55.834472,37.65805",
@@ -109,7 +109,7 @@ def get_data2():
 
 @app.post('/test/', tags=["test"], description="test")
 def get_test(filters: Filters):
-    result = make_coverage(filters.dict())
+    result = make_result(filters.dict())
     print(result)
     return result
 
