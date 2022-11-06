@@ -64,7 +64,7 @@ test_points = {"points":
                 "region": "test",  # Административный округ
                 "district": "test",  # Район
                 "coordinates": "55.7984977,37.5207235",
-                "radius" : 5,
+                "radius": 5,
                 "address_string": "пер. Чапаевский, д. 3, Москва"
             },
             "square": 256740.60,  # площадь помещения float
@@ -72,15 +72,11 @@ test_points = {"points":
             "number of floors": 57,  # этажи
             "number of entrances": 14,  # количество подъездов
             "number_of_apartments": 992,  # количество подъездов
-            "coverage" : 6
+            "coverage": 6
         },
-
-
-
 
     ],
 }
-
 
 
 # test_points1 = {
@@ -110,9 +106,11 @@ def get_data2():
 @app.post('/test/', tags=["test"], description="test")
 def get_test(filters: Filters):
     result = make_result(filters.dict())
+    print(type(result))
     print(result)
-    return result
-
+    json_result = json.loads(result)
+    print(type(json_result))
+    return json_result
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-import numpy as np 
+import numpy as np
 import pandas as pd
 import json
 
@@ -159,7 +159,7 @@ def make_coverage(df, request, proportions):
     res["placement"] = placements
     res.drop(["area", "district", "lat", "lon", "address"], axis=1, inplace=True)
 
-    return pd.DataFrame(coverage).to_json(force_ascii=False, orient="records")
+    return res.to_json(force_ascii=False, orient="records")
 
 
 def make_result(request):
