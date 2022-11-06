@@ -17,7 +17,7 @@ import {
 import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { MenuProps, names } from './Filters.constants';
+import {adm_districts, MenuProps, models, names} from './Filters.constants';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import CircleIcon from '@mui/icons-material/Circle';
 import Switch from '@mui/material/Switch';
@@ -237,7 +237,7 @@ export const Filters = ({ showFilters, setPostamats }) => {
               )}
               MenuProps={MenuProps}
             >
-              {names.map((name) => (
+              {adm_districts.map((name) => (
                 <MenuItem
                   key={name}
                   value={name}
@@ -323,7 +323,7 @@ export const Filters = ({ showFilters, setPostamats }) => {
                 )}
                 MenuProps={MenuProps}
               >
-                {names.map((name) => (
+                {models.map((name) => (
                   <MenuItem
                     key={name}
                     value={name}
