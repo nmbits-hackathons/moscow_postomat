@@ -85,9 +85,9 @@ const MyMap = ({handleTest, mode, showFilters}) => {
 
         handleTest(map);
         setMap(map);
-        let i = 0
+
         map.on('load', function () {
-            map.addSource('maine' + i.toString(), {
+            map.addSource('maine', {
                 type: 'geojson',
                 data: {
                     type: 'FeatureCollection',
@@ -111,9 +111,9 @@ const MyMap = ({handleTest, mode, showFilters}) => {
             });
 
             map.addLayer({
-                'id': 'maine' + i.toString(),
+                'id': 'maine',
                 'type': 'fill',
-                'source': 'maine' + i.toString(),
+                'source': 'maine',
                 'layout': {},
                 'paint': {
                     'fill-color': [
@@ -141,7 +141,7 @@ const MyMap = ({handleTest, mode, showFilters}) => {
             });
         });
 
-        map.on('click', 'maine' + i.toString(), function (e) {
+        map.on('click', 'maine', function (e) {
             new Map
                 .setLngLat(e.lngLat)
                 .setHTML(e.features[0].properties.weight)
