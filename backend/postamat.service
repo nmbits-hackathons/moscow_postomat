@@ -1,0 +1,14 @@
+[Unit]
+Description=Moscow Postamat
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/home/apps/moscow_postomat/backend
+#Environment="PATH=/var/www/myapp/venv/bin"
+ExecStart=make run
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

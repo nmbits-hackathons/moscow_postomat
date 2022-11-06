@@ -1,0 +1,1 @@
+export { PostamatsFullInfoCard } from './PostamatsFullInfoCard';
