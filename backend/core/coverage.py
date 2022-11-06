@@ -157,7 +157,11 @@ def make_coverage(df, request, proportions):
             "address_string": row["address"]
         })
     res["placement"] = placements
-    res.drop(["area", "district", "lat", "lon", "address"], axis=1, inplace=True)
+
+    try:
+        res.drop(["area", "district", "lat", "lon", "address"], axis=1, inplace=True)
+    except:
+        pass
 
     return res.to_json(force_ascii=False, orient="records")
 

@@ -20,7 +20,7 @@ app = FastAPI(title="Moscow Postamat API",
               description=description,
               version="1.0.3", docs_url="/")
 
-origins = ["*"]
+origins = ["*","127.0.0.1:3000"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -94,6 +94,7 @@ def test(filters: Filters):
     json_result = json.loads(result)
     print(type(json_result))
     return json_result
+    #return test_points
 
 
 @app.get('/api/get_pdf_data/', tags=["export_files"], description="exporting data in pdf format")
