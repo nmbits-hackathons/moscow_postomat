@@ -17,7 +17,7 @@ def get_houses_reester(district_by_area):
     """
     upload houses reester.csv
     """  
-    house_reester_ = pd.read_csv('./datasets/houses_reester.csv') 
+    house_reester_ = pd.read_csv('core/datasets/houses_reester.csv')
     house_reester_['lat'] = house_reester_['lat'].astype(float)
     house_reester_['lon'] = house_reester_['lon'].astype(float)
     house_reester_['population'] = house_reester_['population'].astype(float)
@@ -61,7 +61,7 @@ def filter_by_placement(df, district_by_area):
         else:
             filtered_df = filtered_df.append(
                 area_df, ignore_index=True)
-    return filtered_df
+    return filtered_df if len(filtered_df) > 0 else df
 
 
 def get_proportions(places):
@@ -86,7 +86,7 @@ def filter_by_places(df, proportions):
         # user chose point types
         return df[df["type"].apply(lambda x: x in proportions.keys())]
     else:
-        return df    
+        return df
 
 
 def remove_neighbours(df, new_point, radius=RADIUS):
@@ -118,6 +118,8 @@ def make_coverage(df, request, proportions, house_reester):
     Makes result coverage from preprocessed data
     """
     coverage = []
+    print("____________________________________________________")
+    print(df.columns)
     curr_data = df.copy().sort_values(by="indicator", ascending=False)
     # coverage until fixed percent
     if request["coverage"] > 0:
