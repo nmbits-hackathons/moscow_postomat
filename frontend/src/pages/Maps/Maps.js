@@ -38,7 +38,7 @@ const MyMap = ({handleTest, mode, showFilters}) => {
         getPostamats()
             .then((data) => {
                 setLoading(false);
-                setPostamats(getPostamatsForData(get(data, 'data.points')));
+                setPostamats(getPostamatsForData(get(data, 'data')));
             })
             .catch(() => {
                 setError('Ошибка получения постаматов');
@@ -100,32 +100,9 @@ const MyMap = ({handleTest, mode, showFilters}) => {
 
     const [markers, setMarkers] = useState([]);
 
-    // useEffect(() => {
-    //     postamats.forEach(el => {
-    //         try {
-    //             // map.removeLayer(`maine-${el.id}`);
-    //             map.removeSource(`maine-${el.id}`);
-    //         } catch (e) {
-    //
-    //         }
-    //     })
-    //     markers.forEach(el => {
-    //         el.remove()
-    //         console.log(el)
-    //     })
-    // }, [postamats])
 
     useEffect(() => {
         if (map) {
-            // document.getElementById("map").innerHTML = "";
-
-
-
-            // try {
-            //     map.removeLayer(id);
-            // } catch {
-            //
-            // }
 
             postamats.forEach((pos) => {
                 const marker = new Marker({

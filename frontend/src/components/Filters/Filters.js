@@ -68,7 +68,7 @@ export const Filters = ({ showFilters, setPostamats }) => {
     getPostamats(getStateForPostamatsRequest(initialState))
       .then((data) => {
         setLoading(false);
-        setPostamats(getPostamatsForData(get(data, 'data.points')));
+        setPostamats(getPostamatsForData(get(data, 'data')));
       })
       .catch(() => {
         setError('Ошибка получения постаматов');
