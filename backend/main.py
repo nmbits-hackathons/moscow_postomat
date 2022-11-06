@@ -88,7 +88,12 @@ test_points = {"points":
 
 @app.post("/api/get_postamats/", tags=["postmats"], description="getting postamate sampling data")
 def test(filters: Filters):
-    return test_points
+    result = make_result(filters.dict())
+    print(type(result))
+    print(result)
+    json_result = json.loads(result)
+    print(type(json_result))
+    return json_result
 
 
 @app.get('/api/get_pdf_data/', tags=["export_files"], description="exporting data in pdf format")
