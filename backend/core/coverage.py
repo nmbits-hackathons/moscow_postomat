@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
-import json
 
 from core.administrative_divisions import adm_areas, adm_districts
 from core.model_datasets import model_results
 
+RADIUS=0.4
 
 def get_df(model_name):
     """
@@ -12,6 +12,17 @@ def get_df(model_name):
     return: dataframe with marks from a corresponding model
     """
     return pd.read_csv(model_results[model_name]).iloc[:, 1:]
+
+def get_houses_reester(district_by_area):
+    """
+    upload houses reester.csv
+    """  
+    house_reester_ = pd.read_csv('./datasets/houses_reester.csv') 
+    house_reester_['lat'] = house_reester_['lat'].astype(float)
+    house_reester_['lon'] = house_reester_['lon'].astype(float)
+    house_reester_['population'] = house_reester_['population'].astype(float)
+
+    return filter_by_placement(house_reester_, district_by_area)
 
 
 def preprocess_placement_filters(areas, districts):
@@ -78,7 +89,7 @@ def filter_by_places(df, proportions):
         return df    
 
 
-def remove_neighbours(df, new_point, radius=0.4):
+def remove_neighbours(df, new_point, radius=RADIUS):
     """
     df: left points for the coverage
     new_point: (lat, lon) of the last added point
@@ -91,8 +102,18 @@ def remove_neighbours(df, new_point, radius=0.4):
     lon_dist = (lons - new_point[1]) * np.cos(new_point[0] * np.pi / 180) * 111.37
     return df[np.sqrt(lon_dist ** 2 + lat_dist ** 2) > radius]
 
+def calculate_distance_for_point(point, houses):
+    """
+    calculate distances betwee point and all houses
+    """
+    lats = np.array(houses["lat"])
+    lons = np.array(houses["lon"])
+    lat_dist = (lats - point['lat']) * 111.37
+    lon_dist = (lons - point['lon']) * np.cos(point['lat'] * np.pi / 180) * 111.37
+    return np.sqrt(lon_dist ** 2 + lat_dist ** 2)    
 
-def make_coverage(df, request, proportions):
+
+def make_coverage(df, request, proportions, house_reester):
     """
     Makes result coverage from preprocessed data
     """
@@ -100,12 +121,49 @@ def make_coverage(df, request, proportions):
     curr_data = df.copy().sort_values(by="indicator", ascending=False)
     # coverage until fixed percent
     if request["coverage"] > 0:
-        pass
-        # постамат -> set(дома)
-        # set(used дома)
-        # set(used) += дома нового постамата
-        # set(used) -- знаю число
-        # считаем diff(новые - used), для них – людей
+        coverage_left = request["coverage"]
+        covered_houses = set()
+        # house_reester = get_houses_reester()
+        total_people = house_reester['population'].sum()
+        # auto mode
+        if request["places"]["auto"] or len(proportions) == 0:
+            while (coverage_left > 0) and (len(curr_data) > 0):
+                candidate = curr_data.iloc[0, :]
+                coverage.append(dict(curr_data.iloc[0, :]))
+                curr_data = remove_neighbours(
+                    curr_data, (coverage[-1]["lat"], coverage[-1]["lon"])
+                    )
+                # postamat_left -= 1
+
+                distances = calculate_distance_for_point(dict(candidate), house_reester)
+                new_houses = set(house_reester.index[distances < RADIUS])
+                dif_houses = new_houses - covered_houses
+                covered_houses |= new_houses
+
+                coverage_left -= house_reester.loc[list(new_houses)]['population'].sum() / total_people
+        # use proportions
+        else:
+            curr_proportions = {k: int(v * coverage_left * total_people) for k, v in proportions.items()}
+            while (coverage_left > 0) and (len(curr_data) > 0):
+                candidate = curr_data.iloc[0, :]
+                if (curr_proportions[candidate["type"]] > 0) or \
+                    (sum(list(curr_proportions.values())) <= 0):
+                    coverage.append(dict(candidate))
+                    curr_data = remove_neighbours(
+                        curr_data, (coverage[-1]["lat"], coverage[-1]["lon"])
+                        )
+                    
+                    # postamat_left -= 1
+
+                    distances = calculate_distance_for_point(dict(candidate), house_reester)
+                    new_houses = set(house_reester.index[distances < RADIUS])
+                    dif_houses = new_houses - covered_houses
+                    covered_houses |= new_houses
+
+                    coverage_left -= house_reester.loc[list(new_houses)]['population'].sum() / total_people
+                    curr_proportions[candidate["type"]] -= house_reester.loc[list(new_houses)]['population'].sum()
+                else:
+                    curr_data = curr_data.iloc[1:,:]
     else:   # limited amount of postamates
         postamat_left = request["postamat_count"]
         # auto mode
@@ -144,7 +202,7 @@ def make_coverage(df, request, proportions):
         })
     res["placement"] = placements
     res.drop(["area", "district", "lat", "lon", "address",
-        "passenger_flow", "dist_to_center", "station_cnt", "pvz_cnt"], axis=1, inplace=True)
+       "passenger_flow", "dist_to_center", "station_cnt", "pvz_cnt"], axis=1, inplace=True)
     res["id"] = np.arange(len(res))
     res["indicator"] = np.around(res["indicator"], 3)
     return res.to_json(force_ascii=False, orient="records")
@@ -158,5 +216,6 @@ def make_result(request):
     district_by_area = preprocess_placement_filters(request["areas"], request["districts"])
     filtered_data = filter_by_placement(data, district_by_area)
     proportions = get_proportions(request["places"])
-    filtered_data = filter_by_places(data, proportions)
-    return make_coverage(filtered_data, request, proportions)
+    filtered_data = filter_by_places(filtered_data, proportions)
+    house_reester = get_houses_reester(district_by_area)
+    return make_coverage(filtered_data, request, proportions, house_reester)
