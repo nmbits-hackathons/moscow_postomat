@@ -45,9 +45,9 @@ def filter_by_placement(df, district_by_area):
     """
     filtered_df = pd.DataFrame()
     for k, v in district_by_area.items():
-        area_df = df[df.AdmArea == adm_areas[k]]
+        area_df = df[df.area == adm_areas[k]]
         if len(v) != 0:
-            district_df = area_df[area_df.District.apply(lambda x: x in v)]
+            district_df = area_df[area_df.district.apply(lambda x: x in v)]
             filtered_df = filtered_df.append(
                 district_df, ignore_index=True)
         else:
@@ -123,7 +123,7 @@ def make_coverage(df, request, proportions):
     else:   # limited amount of postamates
         postamat_left = request["postamat_count"]
         # auto mode
-        if request["places"]["auto"]:
+        if request["places"]["auto"] or len(proportions) == 0:
             while (postamat_left > 0) and (len(curr_data) > 0):
                 coverage.append(dict(curr_data.iloc[0, :]))
                 curr_data = remove_neighbours(
@@ -145,6 +145,19 @@ def make_coverage(df, request, proportions):
                     postamat_left -= 1
                 else:
                     curr_data = curr_data.iloc[1:,:]
+
+    res = pd.DataFrame(coverage)
+    placements = []
+    for _, row in res.iterrows():
+        placements.append({
+            "area": row["area"],
+            "district": row["district"],
+            "radius": 0 if row["type"] != "house" else 0.4,
+            "coordinates": str(row["lat"]) + "," + str(row["lon"]),
+            "address_string": row["address"]
+        })
+    res["placement"] = placements
+    res.drop(["area", "district", "lat", "lon", "address"], axis=1, inplace=True)
 
     return pd.DataFrame(coverage).to_json(force_ascii=False, orient="records")
 
