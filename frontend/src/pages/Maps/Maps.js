@@ -24,7 +24,7 @@ function hexagon(x, y, km) {
     console.log('start')
     for (let i = 0; i < 6; i++) {
         const x1 = +x + r * Math.cos(i * Math.PI / 3)
-        const x2 =  +y + r / 2 * Math.sin(i * Math.PI / 3)
+        const x2 = +y + r / 2 * Math.sin(i * Math.PI / 3)
         arr.push([x1, x2]);
         // console.log(Math.sin(i * Math.PI / 3))
     }
@@ -96,10 +96,37 @@ const MyMap = ({handleTest, mode, showFilters}) => {
                 .addTo(map);
         });
 
-    }, [mapContainer.current]);
+    }, [mapContainer.current, postamats]);
+
+    const [markers, setMarkers] = useState([]);
+
+    // useEffect(() => {
+    //     postamats.forEach(el => {
+    //         try {
+    //             // map.removeLayer(`maine-${el.id}`);
+    //             map.removeSource(`maine-${el.id}`);
+    //         } catch (e) {
+    //
+    //         }
+    //     })
+    //     markers.forEach(el => {
+    //         el.remove()
+    //         console.log(el)
+    //     })
+    // }, [postamats])
 
     useEffect(() => {
         if (map) {
+            // document.getElementById("map").innerHTML = "";
+
+
+
+            // try {
+            //     map.removeLayer(id);
+            // } catch {
+            //
+            // }
+
             postamats.forEach((pos) => {
                 const marker = new Marker({
                     color: 'red',
@@ -108,6 +135,7 @@ const MyMap = ({handleTest, mode, showFilters}) => {
                     .getElement()
                     .addEventListener('click', () => handleSelectedMarker(pos));
                 marker.setLngLat(pos.coordinates.split(',').reverse()).addTo(map);
+                setMarkers([...markers, marker])
             });
 
             map.on('load', function () {
@@ -127,7 +155,7 @@ const MyMap = ({handleTest, mode, showFilters}) => {
                                     geometry: {
                                         type: 'Polygon',
                                         coordinates: [
-                                            hexagon(el.coordinates.split(',').reverse()[0], el.coordinates.split(',').reverse()[1], 0.6)
+                                            hexagon(el.coordinates.split(',').reverse()[0], el.coordinates.split(',').reverse()[1], el.radius)
                                         ]
                                     }
                                 }
@@ -165,7 +193,6 @@ const MyMap = ({handleTest, mode, showFilters}) => {
                     });
 
                 })
-
 
 
             });
