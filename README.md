@@ -6,12 +6,12 @@ api спецификация http://45.67.228.220:3333/
 
 #Локальный запуск
 
-бэкенд    
+бэкенд:       
 cd backend  
 make venv   
 make run
 
-фронтенд 
+фронтенд:    
 cd frontend  
 npm install   
 npm start
