@@ -16,7 +16,6 @@ export const PostamatsFullInfoCard = ({
 }) => {
   const theme = useTheme();
   if (!fullInfoCardOpen) return null;
-  console.log(fullInfoCardOpen);
   return (
     <Box
       sx={{

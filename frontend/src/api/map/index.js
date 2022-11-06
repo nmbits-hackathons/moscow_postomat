@@ -21,7 +21,7 @@ const mockFilters = {
     radius: 0,
   },
   postamat_count: 2,
-  coverage: 0
+  coverage: 0,
 };
 
 export const getPostamats = (filters = mockFilters) => {

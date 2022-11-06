@@ -1,4 +1,5 @@
 export const getStateForPostamatsRequest = (state) => {
+  console.log(state)
   return {
     places: {
       auto: state.isAutoCalc,
@@ -10,16 +11,16 @@ export const getStateForPostamatsRequest = (state) => {
       underground: state.underground,
       house: state.houses,
     },
-    districts: [],
-    areas: [],
-    model_keyword: 'math_model',
+    districts: state.district || [],
+    areas: state.areas || [],
+    model_keyword: state.model,
     sector: {
       active: false,
       coordinates: 'string',
       radius: 0,
     },
-    postamat_count: 2,
-    coverage: 0
+    postamat_count: state.nPostamats,
+    coverage: 0,
   };
 };
 // {
