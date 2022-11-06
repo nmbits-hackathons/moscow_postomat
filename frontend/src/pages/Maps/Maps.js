@@ -1,5 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Map, Marker } from 'maplibre-gl';
+import {
+  Map,
+  Marker,
+  Popup,
+  MapboxEvent,
+  FeatureIdentifier,
+} from 'maplibre-gl';
 import get from 'lodash/get';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
@@ -17,12 +23,23 @@ export const darkModeStyle = `https://maps.geoapify.com/v1/styles/dark-matter/st
 export const CHANGE_ZOOM_MIN = 'min';
 export const CHANGE_ZOOM_MAX = 'max';
 
+function hexagon(x, y, km) {
+  let r = km / 110;
+  let arr = [];
+  for (let i = 0; i < 6; i++) {
+    const x1 = +x + r * Math.cos((i * Math.PI) / 3);
+    const x2 = +y + (r / 2) * Math.sin((i * Math.PI) / 3);
+    arr.push([x1, x2]);
+  }
+  return arr;
+}
+
 const MyMap = ({ handleTest, mode, showFilters }) => {
   useEffect(() => {
     getPostamats()
       .then((data) => {
         setLoading(false);
-        setPostamats(getPostamatsForData(get(data, 'data.points')));
+        setPostamats(getPostamatsForData(get(data, 'data')));
       })
       .catch(() => {
         setError('Ошибка получения постаматов');
@@ -72,7 +89,15 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
 
     handleTest(map);
     setMap(map);
-  }, [mapContainer.current]);
+
+    map.on('click', 'maine', function (e) {
+      new Map.setLngLat(e.lngLat)
+        .setHTML(e.features[0].properties.weight)
+        .addTo(map);
+    });
+  }, [mapContainer.current, postamats]);
+
+  const [markers, setMarkers] = useState([]);
 
   useEffect(() => {
     if (map) {
@@ -84,12 +109,74 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
           .getElement()
           .addEventListener('click', () => handleSelectedMarker(pos));
         marker.setLngLat(pos.coordinates.split(',').reverse()).addTo(map);
+        setMarkers([...markers, marker]);
+      });
+
+      map.on('load', function () {
+        postamats.forEach((el) => {
+          map.addSource(`maine-${el.id}`, {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: [
+                {
+                  weight: 1,
+                  properties: {
+                    population: 1,
+                    weight: 1,
+                  },
+                  type: 'Feature',
+                  geometry: {
+                    type: 'Polygon',
+                    coordinates: [
+                      hexagon(
+                        el.coordinates.split(',').reverse()[0],
+                        el.coordinates.split(',').reverse()[1],
+                        el.radius
+                      ),
+                    ],
+                  },
+                },
+              ],
+            },
+          });
+          map.addLayer({
+            id: `maine-${el.id}`,
+            type: 'fill',
+            source: `maine-${el.id}`,
+            layout: {},
+            paint: {
+              'fill-color': [
+                'let',
+                'density',
+                ['get', 'weight'],
+                [
+                  'interpolate',
+                  ['linear'],
+                  ['zoom'],
+                  4,
+                  [
+                    'interpolate',
+                    ['linear'],
+                    ['var', 'density'],
+                    2,
+                    ['to-color', 'rgba(255,0,0,0.15)'],
+                    5,
+                    ['to-color', '#fd1a41'],
+                  ],
+                ],
+              ],
+              'fill-opacity': 0.7,
+            },
+          });
+        });
       });
     }
   }, [map, postamats]);
+
   return (
     <div>
-      <Filters {...{ showFilters, setPostamats }} />
+      <Filters {...{ showFilters, setPostamats, setLoading }} />
       <PopupPlaceInfo {...{ selectedPlace }} />
       <div
         className="map-container"

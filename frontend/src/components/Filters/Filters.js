@@ -17,7 +17,7 @@ import {
 import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { MenuProps, names } from './Filters.constants';
+import { adm_districts, MenuProps, models, names } from './Filters.constants';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import CircleIcon from '@mui/icons-material/Circle';
 import Switch from '@mui/material/Switch';
@@ -38,7 +38,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export const Filters = ({ showFilters, setPostamats }) => {
+export const Filters = ({ showFilters, setPostamats, setLoading }) => {
   const theme = useTheme();
   const [expanded, setExpanded] = useState([false, true, true]);
   const handleChange = (panel, index) => (event, isExpanded) => {
@@ -46,7 +46,7 @@ export const Filters = ({ showFilters, setPostamats }) => {
     expandedCopy[index] = !isExpanded;
     setExpanded([...expandedCopy]);
   };
-  const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState(null);
 
   const [initialState, setInitialState] = useState({
@@ -57,18 +57,19 @@ export const Filters = ({ showFilters, setPostamats }) => {
     houses: 0,
     cultureHouses: 0,
     sports: 0,
-    region: [],
+    areas: [],
     district: [],
-    model: [],
-    nPostamats: 0,
+    model: 'math_model',
+    nPostamats: 10,
     isAutoCalc: true,
   });
 
   const handleSearchPostamats = () => {
+    setLoading(true);
     getPostamats(getStateForPostamatsRequest(initialState))
       .then((data) => {
         setLoading(false);
-        setPostamats(getPostamatsForData(get(data, 'data.points')));
+        setPostamats(getPostamatsForData(get(data, 'data')));
       })
       .catch(() => {
         setError('Ошибка получения постаматов');
@@ -187,8 +188,8 @@ export const Filters = ({ showFilters, setPostamats }) => {
               InputLabelProps={{ shrink: false }}
               fullWidth={true}
               sx={selectStyles}
-              value={initialState.region}
-              onChange={(evt) => handleChangeField('region', evt.target.value)}
+              value={initialState.areas}
+              onChange={(evt) => handleChangeField('areas', evt.target.value)}
               input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
               renderValue={(selected) => (
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
@@ -203,7 +204,7 @@ export const Filters = ({ showFilters, setPostamats }) => {
                 <MenuItem
                   key={name}
                   value={name}
-                  style={getStyles(name, initialState.region, theme)}
+                  style={getStyles(name, initialState.areas, theme)}
                 >
                   {name}
                 </MenuItem>
@@ -237,11 +238,11 @@ export const Filters = ({ showFilters, setPostamats }) => {
               )}
               MenuProps={MenuProps}
             >
-              {names.map((name) => (
+              {adm_districts.map((name) => (
                 <MenuItem
                   key={name}
                   value={name}
-                  style={getStyles(name, initialState.region, theme)}
+                  style={getStyles(name, initialState.areas, theme)}
                 >
                   {name}
                 </MenuItem>
@@ -305,29 +306,36 @@ export const Filters = ({ showFilters, setPostamats }) => {
               <Select
                 labelId="demo-multiple-chip-label"
                 id="demo-multiple-chip"
-                multiple={true}
+                multiple={false}
                 InputLabelProps={{ shrink: false }}
                 fullWidth={true}
                 sx={selectStyles}
-                value={initialState.model}
+                value={
+                  models.filter((el) => el.value === initialState.model)[0]
+                    ?.name
+                }
                 label={'Age'}
                 placeholder={'skj'}
-                onChange={(evt) => handleChangeField('model', evt.target.value)}
+                onChange={(evt) =>
+                  handleChangeField(
+                    'model',
+                    models.filter((el) => el.name === evt.target.value)[0]
+                      ?.value
+                  )
+                }
                 input={<OutlinedInput label="Name" />}
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {selected.map((value) => (
-                      <Chip key={value} label={value} />
-                    ))}
+                    <Chip key={selected} label={selected} />
                   </Box>
                 )}
                 MenuProps={MenuProps}
               >
-                {names.map((name) => (
+                {models.map(({ name }) => (
                   <MenuItem
                     key={name}
                     value={name}
-                    style={getStyles(name, initialState.region, theme)}
+                    style={getStyles(name, initialState.areas, theme)}
                   >
                     {name}
                   </MenuItem>
@@ -666,7 +674,6 @@ export const Filters = ({ showFilters, setPostamats }) => {
           color="primary"
           fullWidth={true}
           onClick={() => handleSearchPostamats()}
-          disabled={loading}
         >
           Поиск
         </Button>
@@ -678,7 +685,7 @@ export const Filters = ({ showFilters, setPostamats }) => {
         <Alert
           sx={{
             zIndex: 1000,
-            position: 'absolute',
+            position: 'fixed',
             top: '96px',
             right: '15px',
           }}
