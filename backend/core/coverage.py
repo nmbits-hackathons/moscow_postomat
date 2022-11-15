@@ -4,7 +4,6 @@ import pandas as pd
 from core.administrative_divisions import adm_areas, adm_districts
 from core.model_datasets import model_results
 
-RADIUS=0.4
 
 def get_df(model_name):
     """
@@ -214,6 +213,7 @@ def make_result(request):
     """
     Coverage creation according to user's settings.
     """
+    global RADIUS = request["radius"]
     data = get_df(request["model_keyword"])
     district_by_area = preprocess_placement_filters(request["areas"], request["districts"])
     filtered_data = filter_by_placement(data, district_by_area)
