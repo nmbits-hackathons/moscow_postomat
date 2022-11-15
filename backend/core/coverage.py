@@ -88,7 +88,7 @@ def filter_by_places(df, proportions):
         return df
 
 
-def remove_neighbours(df, new_point, radius=RADIUS):
+def remove_neighbours(df, new_point):
     """
     df: left points for the coverage
     new_point: (lat, lon) of the last added point
@@ -99,7 +99,7 @@ def remove_neighbours(df, new_point, radius=RADIUS):
     lons = np.array(df["lon"])
     lat_dist = (lats - new_point[0]) * 111.37
     lon_dist = (lons - new_point[1]) * np.cos(new_point[0] * np.pi / 180) * 111.37
-    return df[np.sqrt(lon_dist ** 2 + lat_dist ** 2) > radius]
+    return df[np.sqrt(lon_dist ** 2 + lat_dist ** 2) > RADIUS]
 
 def calculate_distance_for_point(point, houses):
     """
@@ -197,7 +197,7 @@ def make_coverage(df, request, proportions, house_reester):
         placements.append({
             "area": row["area"],
             "district": row["district"],
-            "radius": 0 if row["type"] != "house" else 0.4,
+            "radius": 0 if row["type"] != "house" else RADIUS,
             "coordinates": str(row["lat"]) + "," + str(row["lon"]),
             "address_string": row["address"]
         })
@@ -213,7 +213,8 @@ def make_result(request):
     """
     Coverage creation according to user's settings.
     """
-    global RADIUS = request["radius"]
+    global RADIUS
+    RADIUS = request["radius"]
     data = get_df(request["model_keyword"])
     district_by_area = preprocess_placement_filters(request["areas"], request["districts"])
     filtered_data = filter_by_placement(data, district_by_area)
