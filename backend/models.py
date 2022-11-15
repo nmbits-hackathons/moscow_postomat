@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import optional as optional
 from pydantic import BaseModel
@@ -28,7 +28,8 @@ class Filters(BaseModel):  # характеристики транспорта
     model_keyword: str = "math_model"
     sector: Sector = None
     postamat_count: int = 10
-    coverage : int
+    coverage : float
+    radius: Optional[float]
 
     class Config:
         orm_mode = True

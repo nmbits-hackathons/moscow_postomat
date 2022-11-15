@@ -12,10 +12,11 @@ def get_df(model_name):
     """
     return pd.read_csv(model_results[model_name]).iloc[:, 1:]
 
+
 def get_houses_reester(district_by_area):
     """
     upload houses reester.csv
-    """  
+    """
     house_reester_ = pd.read_csv('core/datasets/houses_reester.csv')
     house_reester_['lat'] = house_reester_['lat'].astype(float)
     house_reester_['lon'] = house_reester_['lon'].astype(float)
@@ -101,6 +102,7 @@ def remove_neighbours(df, new_point):
     lon_dist = (lons - new_point[1]) * np.cos(new_point[0] * np.pi / 180) * 111.37
     return df[np.sqrt(lon_dist ** 2 + lat_dist ** 2) > RADIUS]
 
+
 def calculate_distance_for_point(point, houses):
     """
     calculate distances betwee point and all houses
@@ -109,7 +111,7 @@ def calculate_distance_for_point(point, houses):
     lons = np.array(houses["lon"])
     lat_dist = (lats - point['lat']) * 111.37
     lon_dist = (lons - point['lon']) * np.cos(point['lat'] * np.pi / 180) * 111.37
-    return np.sqrt(lon_dist ** 2 + lat_dist ** 2)    
+    return np.sqrt(lon_dist ** 2 + lat_dist ** 2)
 
 
 def make_coverage(df, request, proportions, house_reester):
@@ -117,23 +119,25 @@ def make_coverage(df, request, proportions, house_reester):
     Makes result coverage from preprocessed data
     """
     coverage = []
-    print("____________________________________________________")
+    print("____________________________________________________", request["coverage"])
     print(df.columns)
     curr_data = df.copy().sort_values(by="indicator", ascending=False)
     # coverage until fixed percent
     if request["coverage"] > 0:
+        print("dwfdafdfadvadfasfadfoiasfasfkjaslfj")
         coverage_left = request["coverage"]
         covered_houses = set()
         # house_reester = get_houses_reester()
         total_people = house_reester['population'].sum()
         # auto mode
         if request["places"]["auto"] or len(proportions) == 0:
+            print("2______________")
             while (coverage_left > 0) and (len(curr_data) > 0):
                 candidate = curr_data.iloc[0, :]
                 coverage.append(dict(curr_data.iloc[0, :]))
                 curr_data = remove_neighbours(
                     curr_data, (coverage[-1]["lat"], coverage[-1]["lon"])
-                    )
+                )
                 # postamat_left -= 1
 
                 distances = calculate_distance_for_point(dict(candidate), house_reester)
@@ -144,16 +148,17 @@ def make_coverage(df, request, proportions, house_reester):
                 coverage_left -= house_reester.loc[list(new_houses)]['population'].sum() / total_people
         # use proportions
         else:
+            print("3______________")
             curr_proportions = {k: int(v * coverage_left * total_people) for k, v in proportions.items()}
             while (coverage_left > 0) and (len(curr_data) > 0):
                 candidate = curr_data.iloc[0, :]
                 if (curr_proportions[candidate["type"]] > 0) or \
-                    (sum(list(curr_proportions.values())) <= 0):
+                        (sum(list(curr_proportions.values())) <= 0):
                     coverage.append(dict(candidate))
                     curr_data = remove_neighbours(
                         curr_data, (coverage[-1]["lat"], coverage[-1]["lon"])
-                        )
-                    
+                    )
+
                     # postamat_left -= 1
 
                     distances = calculate_distance_for_point(dict(candidate), house_reester)
@@ -164,8 +169,9 @@ def make_coverage(df, request, proportions, house_reester):
                     coverage_left -= house_reester.loc[list(new_houses)]['population'].sum() / total_people
                     curr_proportions[candidate["type"]] -= house_reester.loc[list(new_houses)]['population'].sum()
                 else:
-                    curr_data = curr_data.iloc[1:,:]
-    else:   # limited amount of postamates
+                    curr_data = curr_data.iloc[1:, :]
+    else:  # limited amount of postamates
+        print("qfqqqqslksdjlsdlkslkamsdlmsldkmalskdmlskdm")
         postamat_left = request["postamat_count"]
         # auto mode
         if request["places"]["auto"] or len(proportions) == 0:
@@ -173,7 +179,7 @@ def make_coverage(df, request, proportions, house_reester):
                 coverage.append(dict(curr_data.iloc[0, :]))
                 curr_data = remove_neighbours(
                     curr_data, (coverage[-1]["lat"], coverage[-1]["lon"])
-                    )
+                )
                 postamat_left -= 1
         # use proportions
         else:
@@ -181,15 +187,15 @@ def make_coverage(df, request, proportions, house_reester):
             while (postamat_left > 0) and (len(curr_data) > 0):
                 candidate = curr_data.iloc[0, :]
                 if (curr_proportions[candidate["type"]] > 0) or \
-                    (sum(list(curr_proportions.values())) <= 0):
+                        (sum(list(curr_proportions.values())) <= 0):
                     coverage.append(dict(candidate))
                     curr_data = remove_neighbours(
                         curr_data, (coverage[-1]["lat"], coverage[-1]["lon"])
-                        )
+                    )
                     curr_proportions[candidate["type"]] -= 1
                     postamat_left -= 1
                 else:
-                    curr_data = curr_data.iloc[1:,:]
+                    curr_data = curr_data.iloc[1:, :]
 
     res = pd.DataFrame(coverage)
     placements = []
@@ -202,9 +208,13 @@ def make_coverage(df, request, proportions, house_reester):
             "address_string": row["address"]
         })
     res["placement"] = placements
-    res.drop(["area", "district", "lat", "lon", "address",
-       "passenger_flow", "dist_to_center", "station_cnt", "pvz_cnt"], axis=1, inplace=True)
+    try:
+        res.drop(["area", "district", "lat", "lon", "address",
+                  "passenger_flow", "dist_to_center", "station_cnt", "pvz_cnt"], axis=1, inplace=True)
+    except:
+        pass
     res["id"] = np.arange(len(res))
+    print(res.columns, "___________________________________")
     res["indicator"] = np.around(res["indicator"], 3)
     return res.to_json(force_ascii=False, orient="records")
 

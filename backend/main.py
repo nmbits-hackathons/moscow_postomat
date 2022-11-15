@@ -4,7 +4,7 @@ import uvicorn
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
 from core.coverage import make_result
-
+import pandas
 from models import Filters
 
 description = """
@@ -104,14 +104,22 @@ def get_data1():
     return FileResponse(media_type='application/octet-stream', filename="data.pdf", path=file_path)
 
 
-@app.get('/api/get_xlsx_data/', tags=["export_files"], description="exporting data in xlsx format")
-def get_data2():
+@app.post('/api/get_xlsx_data/', tags=["export_files"], description="exporting data in xlsx format")
+def get_data2(filters: Filters):
     file_path = "storage/data.xlsx"
-    return FileResponse(media_type='application/octet-stream', filename="data.xlsx", path=file_path)
+    result = make_result(filters.dict())
+    print(type(result))
+    print(result)
+    json_result = json.loads(result)
+    with open('storage/data.json', 'w') as f:
+        json.dump(json_result, f)
+    pandas.read_json("storage/data.json").to_excel("storage/output.xlsx")
+    return FileResponse(media_type='application/octet-stream', filename="data.xlsx", path="storage/output.xlsx")
 
 
 @app.post('/test/', tags=["test"], description="test")
 def get_test(filters: Filters):
+    print(filters.dict())
     result = make_result(filters.dict())
     print(type(result))
     print(result)
