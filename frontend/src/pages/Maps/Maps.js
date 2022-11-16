@@ -17,6 +17,9 @@ import { PopupPlaceInfo } from '../../components/PopupPlaceInfo';
 import { getPostamats } from '../../api';
 import { getPostamatsForData } from './util/getPostamats/getPostamats';
 
+import { MaplibreExportControl, Size, PageOrientation, Format, DPI} from "@watergis/maplibre-gl-export";
+import '@watergis/maplibre-gl-export/css/styles.css';
+
 const myAPIKey = '3929778c687f40708c37d2155877714a';
 export const lightMapStyle = `https://maps.geoapify.com/v1/styles/positron/style.json?apiKey=${myAPIKey}`;
 export const darkModeStyle = `https://maps.geoapify.com/v1/styles/dark-matter/style.json?apiKey=${myAPIKey}`;
@@ -34,6 +37,19 @@ function hexagon(x, y, km) {
   return arr;
 }
 
+function getColor(x) {
+  if (x > 7) {
+    return '#fd1a41';
+  }
+  if (x > 6) {
+    return 'rgba(255,59,89,0.72)';
+  }
+  if (x > 5) {
+    return 'rgba(255,119,139,0.81)';
+  }
+  return  'rgba(80,80,80,0.74)';
+}
+
 const MyMap = ({ handleTest, mode, showFilters }) => {
   useEffect(() => {
     getPostamats()
@@ -42,10 +58,11 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
         setPostamats(getPostamatsForData(get(data, 'data')));
       })
       .catch(() => {
-        setError('Ошибка получения постаматов');
+        // setError('Ошибка получения постаматов');
         setLoading(false);
       });
   }, []);
+  let L_PREFER_CANVAS = true;
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [postamats, setPostamats] = useState([]);
@@ -95,6 +112,18 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
         .setHTML(e.features[0].properties.weight)
         .addTo(map);
     });
+
+
+    map.addControl(new MaplibreExportControl({
+      Filename: 'размещение-постаматов-' + new Date().toISOString().slice(0, 10),
+      PageSize: Size.A3,
+      PageOrientation: PageOrientation.Landscape,
+      Format: Format.PDF,
+      DPI: DPI[96],
+      Crosshair: true,
+      PrintableArea: true
+    }), 'bottom-right');
+
   }, [mapContainer.current, postamats]);
 
   const [markers, setMarkers] = useState([]);
@@ -103,8 +132,10 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
     if (map) {
       let ps = postamats
       ps.forEach((pos) => {
+        // alert(pos)
         const marker = new Marker({
-          color: 'red',
+          color: pos.radius === 0 ? getColor(pos.indicator) : '#949494',
+          scale: pos.radius === 0 ? 1 : 0.5
         });
         marker
           .getElement()
@@ -159,17 +190,21 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
                     'interpolate',
                     ['linear'],
                     ['var', 'density'],
-                    9.96,
-                    ['to-color', 'rgba(157,157,157,0.74)'],
-                    9.97,
-                    ['to-color', 'rgba(255,171,185,0.58)'],
-                    9.98,
-                    ['to-color', 'rgba(255,99,125,0.44)'],
-                    9.99,
-                    ['to-color', 'rgba(211,8,52,0.66)'],
-                    9.995,
-                    ['to-color', 'rgba(253,26,65,0.67)'],
-                    9.999,
+                    2,
+                    ['to-color', 'rgba(80,80,80,0.74)'],
+                    3,
+                    ['to-color', 'rgba(155,152,152,0.74)'],
+                    4,
+                    ['to-color', 'rgba(190,185,185,0.74)'],
+                    5,
+                    ['to-color', 'rgba(255,167,182,0.82)'],
+                    6,
+                    ['to-color', 'rgba(255,119,139,0.81)'],
+                    7,
+                    ['to-color', 'rgba(255,86,122,0.63)'],
+                    8,
+                    ['to-color', 'rgba(255,59,89,0.72)'],
+                    9,
                     ['to-color', '#fd1a41'],
                   ],
                 ],
@@ -177,6 +212,7 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
               'fill-opacity': 0.7,
             },
           });
+
         });
       });
     }
@@ -185,7 +221,7 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
   return (
     <div>
       <Filters {...{ showFilters, setPostamats, setLoading }} />
-      <PopupPlaceInfo {...{ selectedPlace }} />
+      <PopupPlaceInfo {...{ selectedPlace, cov: (selectedPlace == null ? null : postamats[selectedPlace['id']])} } />
       <div
         className="map-container"
         style={{ width: '100vw', height: '100vh' }}

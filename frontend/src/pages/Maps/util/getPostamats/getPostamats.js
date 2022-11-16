@@ -12,6 +12,7 @@ export const getPostamatsForData = (points) => {
       'number_of_apartments',
       'number of entrances',
       'number of floors',
+      'coverage'
     ]),
     ...pick(get(el, 'placement'), ['coordinates', 'address_string', 'radius']),
   }));
