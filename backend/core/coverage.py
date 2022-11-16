@@ -119,19 +119,15 @@ def make_coverage(df, request, proportions, house_reester):
     Makes result coverage from preprocessed data
     """
     coverage = []
-    print("____________________________________________________", request["coverage"])
-    print(df.columns)
     curr_data = df.copy().sort_values(by="indicator", ascending=False)
     # coverage until fixed percent
     if request["coverage"] > 0:
-        print("dwfdafdfadvadfasfadfoiasfasfkjaslfj")
         coverage_left = request["coverage"]
         covered_houses = set()
         # house_reester = get_houses_reester()
         total_people = house_reester['population'].sum()
         # auto mode
         if request["places"]["auto"] or len(proportions) == 0:
-            print("2______________")
             while (coverage_left > 0) and (len(curr_data) > 0):
                 candidate = curr_data.iloc[0, :]
                 coverage.append(dict(curr_data.iloc[0, :]))
@@ -148,7 +144,6 @@ def make_coverage(df, request, proportions, house_reester):
                 coverage_left -= house_reester.loc[list(new_houses)]['population'].sum() / total_people
         # use proportions
         else:
-            print("3______________")
             curr_proportions = {k: int(v * coverage_left * total_people) for k, v in proportions.items()}
             while (coverage_left > 0) and (len(curr_data) > 0):
                 candidate = curr_data.iloc[0, :]
@@ -171,7 +166,6 @@ def make_coverage(df, request, proportions, house_reester):
                 else:
                     curr_data = curr_data.iloc[1:, :]
     else:  # limited amount of postamates
-        print("qfqqqqslksdjlsdlkslkamsdlmsldkmalskdmlskdm")
         postamat_left = request["postamat_count"]
         # auto mode
         if request["places"]["auto"] or len(proportions) == 0:

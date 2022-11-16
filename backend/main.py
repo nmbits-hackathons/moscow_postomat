@@ -20,7 +20,7 @@ app = FastAPI(title="Moscow Postamat API",
               description=description,
               version="1.0.3", docs_url="/")
 
-origins = ["*","127.0.0.1:3000"]
+origins = ["*", "127.0.0.1:3000"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -78,16 +78,23 @@ test_points = {"points":
     ],
 }
 
-
 # test_points1 = {
 #     [
 #
 #     ]
 # }
+class INIT_FILTERS():
+    def __init__(self):
+        self.filters = []
+
+file_filters = INIT_FILTERS()
+
+
 
 
 @app.post("/api/get_postamats/", tags=["postmats"], description="getting postamate sampling data")
 def test(filters: Filters):
+    file_filters.filters = filters
     print(filters)
     result = make_result(filters.dict())
     print(type(result))
@@ -95,7 +102,7 @@ def test(filters: Filters):
     json_result = json.loads(result)
     print(type(json_result))
     return json_result
-    #return test_points
+    # return test_points
 
 
 @app.get('/api/get_pdf_data/', tags=["export_files"], description="exporting data in pdf format")
@@ -104,8 +111,9 @@ def get_data1():
     return FileResponse(media_type='application/octet-stream', filename="data.pdf", path=file_path)
 
 
-@app.post('/api/get_xlsx_data/', tags=["export_files"], description="exporting data in xlsx format")
-def get_data2(filters: Filters):
+@app.get('/api/get_xlsx_data/', tags=["export_files"], description="exporting data in xlsx format")
+def get_data2():
+    filters = file_filters.filters
     file_path = "storage/data.xlsx"
     result = make_result(filters.dict())
     print(type(result))
