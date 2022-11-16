@@ -74,7 +74,19 @@ export const Filters = ({showFilters, setPostamats, setLoading}) => {
       .then((data) => {
         setLoading(false);
         console.log('ddddd', )
-        setPostamats(getPostamatsForData(get(data, 'data')));
+        data = getPostamatsForData(get(data, 'data'));
+        let index = 0
+        data.forEach((el) => {
+          console.log('UUUUU', el)
+          if (el.indicator <= 2) {
+            data[index].indicator = Math.min(0.0 + 7 + el.indicator, 0.0 + el.indicator + Math.trunc(el.coverage / 5000))
+          }
+          if (el.coverage <= 10000 && el.indicator >= 6) {
+            data[index].indicator = Math.max(2 + el.indicator - Math.trunc(el.indicator), Math.min(7 + el.indicator - Math.trunc(el.indicator), 0.0 + el.indicator - 20000 / Math.max(el.coverage, 20000)))
+          }
+          index += 1
+        })
+        setPostamats(data);
       })
       .catch(() => {
         setError('Ошибка получения постаматов');
@@ -85,6 +97,7 @@ export const Filters = ({showFilters, setPostamats, setLoading}) => {
     if (key === 'areas') {
       //setDistr([])
       let copy = []
+      handleChangeField('district', [])
       value.forEach((el) => {
         // alert(el)
         adm_districts[el].forEach(el1 => {

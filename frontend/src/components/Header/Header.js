@@ -6,10 +6,6 @@ import { Button } from '@mui/material';
 import icon from '../../assets/upload.svg';
 import { useHeaderComponents } from './hooks/useHeaderComponents';
 import { GET_PDF_FILE, GET_XLSX_FILE } from '../../api/path';
-import html2pdf from "html2pdf.js/src";
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
-import * as jspdf from "jspdf";
 
 export const Header = ({ showFilters, setShowFilters }) => {
   const theme = useTheme();

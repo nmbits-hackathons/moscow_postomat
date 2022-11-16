@@ -62,6 +62,7 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
         setLoading(false);
       });
   }, []);
+  let L_PREFER_CANVAS = true;
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [postamats, setPostamats] = useState([]);
@@ -211,6 +212,7 @@ const MyMap = ({ handleTest, mode, showFilters }) => {
               'fill-opacity': 0.7,
             },
           });
+
         });
       });
     }
