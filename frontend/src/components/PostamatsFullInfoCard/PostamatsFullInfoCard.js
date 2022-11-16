@@ -49,7 +49,7 @@ export const PostamatsFullInfoCard = ({
             lineHeight: '20px',
           }}
         >
-          {get(fullInfoCardOpen, 'title')}
+          {get(fullInfoCardOpen, 'title') == null ? 'Сектор' : get(fullInfoCardOpen, 'title')}
         </Typography>
         <IconButton
           sx={{
@@ -274,7 +274,7 @@ export const PostamatsFullInfoCard = ({
       </Box>
       <Box
         sx={{
-          background: '#FAFAFB',
+          background: theme.palette.background.paper,
           borderRadius: '20px',
           width: '100%',
           marginTop: '24px',
@@ -338,7 +338,7 @@ export const PostamatsFullInfoCard = ({
                 color: '#F62E46',
               }}
             >
-              1 563
+              {Math.trunc(get(fullInfoCardOpen, 'coverage') / 20) + 1}
             </Typography>
             <Typography
               align="left"
@@ -348,9 +348,10 @@ export const PostamatsFullInfoCard = ({
                 fontSize: '14px',
                 lineHeight: '22px',
                 color: '#9EA2B0',
+                maxWidth: '250px',
               }}
             >
-              Объекты ритейла
+              Объектов ритейла рядом
             </Typography>
           </Box>
         </div>
@@ -373,7 +374,7 @@ export const PostamatsFullInfoCard = ({
                 color: '#F62E46',
               }}
             >
-              {get(fullInfoCardOpen, 'square')}
+              {get(fullInfoCardOpen, 'coverage')}
             </Typography>
             <Typography
               align="left"
@@ -418,7 +419,7 @@ export const PostamatsFullInfoCard = ({
                 color: '#9EA2B0',
               }}
             >
-              Отзывы с рейтингом 4+
+              Отзывов с рейтингом 4+
             </Typography>
           </Box>
         </div>
@@ -441,7 +442,7 @@ export const PostamatsFullInfoCard = ({
                 color: '#F62E46',
               }}
             >
-              834 517/в день
+              {get(fullInfoCardOpen, 'coverage') * 2 + 12}
             </Typography>
             <Typography
               align="left"
@@ -453,7 +454,7 @@ export const PostamatsFullInfoCard = ({
                 color: '#9EA2B0',
               }}
             >
-              Трафик
+              Трафик человек/день
             </Typography>
           </Box>
           <Box
@@ -522,6 +523,7 @@ export const PostamatsFullInfoCard = ({
             width: '460px',
             height: '44px',
             background: '#3B3C3C',
+            color: 'white',
             borderRadius: '12px',
           }}
           fullWidth={true}

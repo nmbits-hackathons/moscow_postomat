@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import { useTheme } from '@mui/material/styles';
+import {useTheme} from '@mui/material/styles';
 import {
   AccordionDetails,
   AccordionSummary,
@@ -15,19 +15,19 @@ import {
   Slider,
 } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { adm_districts, MenuProps, models, names } from './Filters.constants';
+import {adm_districts, MenuProps, models, names} from './Filters.constants';
 import PanoramaFishEyeIcon from '@mui/icons-material/PanoramaFishEye';
 import CircleIcon from '@mui/icons-material/Circle';
 import Switch from '@mui/material/Switch';
-import { getPostamats } from '../../api';
-import { getPostamatsForData } from '../../pages/Maps/util/getPostamats/getPostamats';
+import {getPostamats} from '../../api';
+import {getPostamatsForData} from '../../pages/Maps/util/getPostamats/getPostamats';
 import get from 'lodash/get';
-import { getStateForPostamatsRequest } from './utils/getStateForPostamatsRequest';
+import {getStateForPostamatsRequest} from './utils/getStateForPostamatsRequest';
 import Alert from '@mui/material/Alert';
 
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+const label = {inputProps: {'aria-label': 'Checkbox demo'}};
 
 function getStyles(name, personName, theme) {
   return {
@@ -38,7 +38,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export const Filters = ({ showFilters, setPostamats, setLoading }) => {
+export const Filters = ({showFilters, setPostamats, setLoading}) => {
   const theme = useTheme();
   const [expanded, setExpanded] = useState([false, true, true]);
   const handleChange = (panel, index) => (event, isExpanded) => {
@@ -60,15 +60,20 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
     areas: [],
     district: [],
     model: 'math_model',
-    nPostamats: 10,
+    coverage: 0,
+    nPostamats: 100,
     isAutoCalc: true,
+    radius: 500,
   });
+
+  const [distr, setDistr] = useState([])
 
   const handleSearchPostamats = () => {
     setLoading(true);
     getPostamats(getStateForPostamatsRequest(initialState))
       .then((data) => {
         setLoading(false);
+        console.log('ddddd', )
         setPostamats(getPostamatsForData(get(data, 'data')));
       })
       .catch(() => {
@@ -76,11 +81,33 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
         setLoading(false);
       });
   };
-  const handleChangeField = (key, value) =>
-    setInitialState((prev) => ({ ...prev, [key]: value }));
+  const handleChangeField = (key, value) => {
+    if (key === 'areas') {
+      //setDistr([])
+      let copy = []
+      value.forEach((el) => {
+        // alert(el)
+        adm_districts[el].forEach(el1 => {
+          copy = [...copy, el1]
+        })
+      })
+      setDistr(copy)
+      // alert(ar);
+    }
+    if (initialState.coverage > 0 && key !== 'nPostamats') {
+      let copy = {...initialState}
+      copy['nPostamats'] = 0
+      setInitialState({...copy});
+    } if (initialState.nPostamats > 0 && key === 'nPostamats') {
+      let copy = {...initialState}
+      copy['coverage'] = 0
+      setInitialState({...copy});
+    }
+    setInitialState((prev) => ({...prev, [key]: value}));
+  }
 
   const selectStyles = {
-    ...{ '& legend': { display: 'none' }, '& fieldset': { top: 0 } },
+    ...{'& legend': {display: 'none'}, '& fieldset': {top: 0}},
     ...{
       '& .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.palette.divider,
@@ -164,37 +191,37 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
               paddingBottom: '16px',
               borderBottom: 'solid 1px ' + theme.palette.divider,
             }}
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon/>}
             aria-controls="panel1d-content"
             id="panel1d-header"
           >
-            <Typography variant={'h5'} style={{ marginLeft: '0px' }}>
+            <Typography variant={'h5'} style={{marginLeft: '0px'}}>
               Месторасположение
             </Typography>
           </AccordionSummary>
 
-          <AccordionDetails style={{ padding: '0' }}>
-            <div style={{ height: '20px' }}></div>
+          <AccordionDetails style={{padding: '0'}}>
+            <div style={{height: '20px'}}></div>
             <Typography color={theme.palette.text.secondary}>
               Административный округ
             </Typography>
 
-            <div style={{ height: '4px' }}></div>
+            <div style={{height: '4px'}}></div>
 
             <Select
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple={true}
-              InputLabelProps={{ shrink: false }}
+              InputLabelProps={{shrink: false}}
               fullWidth={true}
               sx={selectStyles}
               value={initialState.areas}
               onChange={(evt) => handleChangeField('areas', evt.target.value)}
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              input={<OutlinedInput id="select-multiple-chip" label="Chip"/>}
               renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
                   {selected.map((value) => (
-                    <Chip key={value} label={value} />
+                    <Chip key={value} label={value}/>
                   ))}
                 </Box>
               )}
@@ -211,34 +238,34 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
               ))}
             </Select>
 
-            <div style={{ height: '16px' }}></div>
+            <div style={{height: '16px'}}></div>
 
             <Typography color={theme.palette.text.secondary}>Район</Typography>
 
-            <div style={{ height: '4px' }}></div>
+            <div style={{height: '4px'}}></div>
 
             <Select
               labelId="demo-multiple-chip-label"
               id="demo-multiple-chip"
               multiple={true}
-              InputLabelProps={{ shrink: false }}
+              InputLabelProps={{shrink: false}}
               fullWidth={true}
               sx={selectStyles}
               value={initialState.district}
               onChange={(evt) =>
                 handleChangeField('district', evt.target.value)
               }
-              input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+              input={<OutlinedInput id="select-multiple-chip" label="Chip"/>}
               renderValue={(selected) => (
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
                   {selected.map((value) => (
-                    <Chip key={value} label={value} />
+                    <Chip key={value} label={value}/>
                   ))}
                 </Box>
               )}
               MenuProps={MenuProps}
             >
-              {adm_districts.map((name) => (
+              {distr.map((name) => (
                 <MenuItem
                   key={name}
                   value={name}
@@ -279,23 +306,23 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
               paddingBottom: '16px',
               borderBottom: 'solid 1px ' + theme.palette.divider,
             }}
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon/>}
             aria-controls="panel1d-content"
             id="panel1d-header"
           >
-            <Typography variant={'h5'} style={{ marginLeft: '0px' }}>
+            <Typography variant={'h5'} style={{marginLeft: '0px'}}>
               Расчет
             </Typography>
           </AccordionSummary>
-          <AccordionDetails style={{ padding: '0' }}>
-            <div style={{ height: '20px' }}></div>
+          <AccordionDetails style={{padding: '0'}}>
+            <div style={{height: '20px'}}></div>
             <Typography color={theme.palette.text.secondary}>
               Алгоритм расчета
             </Typography>
 
-            <div style={{ height: '4px' }}></div>
+            <div style={{height: '4px'}}></div>
 
-            <FormControl sx={{ width: '100%' }}>
+            <FormControl sx={{width: '100%'}}>
               <InputLabel
                 sx={inputLabelStyles}
                 shrink={false}
@@ -307,7 +334,7 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
                 labelId="demo-multiple-chip-label"
                 id="demo-multiple-chip"
                 multiple={false}
-                InputLabelProps={{ shrink: false }}
+                InputLabelProps={{shrink: false}}
                 fullWidth={true}
                 sx={selectStyles}
                 value={
@@ -323,15 +350,15 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
                       ?.value
                   )
                 }
-                input={<OutlinedInput label="Name" />}
+                input={<OutlinedInput label="Name"/>}
                 renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    <Chip key={selected} label={selected} />
+                  <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+                    <Chip key={selected} label={selected}/>
                   </Box>
                 )}
                 MenuProps={MenuProps}
               >
-                {models.map(({ name }) => (
+                {models.map(({name}) => (
                   <MenuItem
                     key={name}
                     value={name}
@@ -343,7 +370,7 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
               </Select>
             </FormControl>
 
-            <div style={{ height: '16px' }}></div>
+            <div style={{height: '16px'}}></div>
 
             <Typography color={theme.palette.text.secondary}>
               Количество постаматов
@@ -360,6 +387,46 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
               // }}
               onChange={(evt) =>
                 handleChangeField('nPostamats', evt.target.value)
+              }
+            />
+
+            <div style={{height: '16px'}}></div>
+
+            <Typography color={theme.palette.text.secondary}>
+              Охват населения в %
+            </Typography>
+
+            <OutlinedInput
+              sx={selectStyles}
+              id="filled-number"
+              label="Number"
+              type="number"
+              value={initialState.coverage}
+              // InputLabelProps={{
+              //     shrink: false,
+              // }}
+              onChange={(evt) =>
+                handleChangeField('coverage', evt.target.value)
+              }
+            />
+
+            <div style={{height: '16px'}}></div>
+
+            <Typography color={theme.palette.text.secondary}>
+              Радиус сектора, м
+            </Typography>
+
+            <OutlinedInput
+              sx={selectStyles}
+              id="filled-number"
+              label="Number"
+              type="number"
+              value={initialState.radius}
+              // InputLabelProps={{
+              //     shrink: false,
+              // }}
+              onChange={(evt) =>
+                handleChangeField('radius', evt.target.value)
               }
             />
 
@@ -391,17 +458,17 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
               paddingBottom: '16px',
               borderBottom: 'solid 1px ' + theme.palette.divider,
             }}
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon/>}
             aria-controls="panel1d-content"
             id="panel1d-header"
           >
             <div>
-              <Typography variant={'h5'} style={{ marginLeft: '0px' }}>
+              <Typography variant={'h5'} style={{marginLeft: '0px'}}>
                 Объекты размещения
               </Typography>
               <Typography
                 color={theme.palette.text.secondary}
-                style={{ marginLeft: '0px' }}
+                style={{marginLeft: '0px'}}
               >
                 Отметьте интересующие типы объектов размещения и укажите их
                 соотношение
@@ -409,7 +476,7 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
             </div>
           </AccordionSummary>
 
-          <AccordionDetails style={{ padding: '0' }}>
+          <AccordionDetails style={{padding: '0'}}>
             <div
               style={{
                 marginTop: '20px',
@@ -419,7 +486,7 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
                 padding: '16px',
               }}
             >
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div style={{display: 'flex', flexDirection: 'column'}}>
                 <Typography>Все типы объектов</Typography>
                 <Typography>Мы предложим их оптимальное соотношение</Typography>
               </div>
@@ -429,8 +496,8 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
                 }
                 {...label}
                 checked={initialState.isAutoCalc}
-                icon={<PanoramaFishEyeIcon />}
-                checkedIcon={<CircleIcon />}
+                icon={<PanoramaFishEyeIcon/>}
+                checkedIcon={<CircleIcon/>}
               />
             </div>
 
@@ -510,7 +577,7 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
               <Switch
                 onChange={(event) =>
                   handleChangeField(
-                    'multifunctionalCenter',
+                    'libraries',
                     event.target.checked ? 50 : 0
                   )
                 }
@@ -670,7 +737,7 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
           variant="contained"
           sx={{
             background: theme.palette.text.secondary,
-              borderRadius: '12px'
+            borderRadius: '12px'
           }}
           color="primary"
           fullWidth={true}
@@ -679,7 +746,7 @@ export const Filters = ({ showFilters, setPostamats, setLoading }) => {
           Поиск
         </Button>
         <Button variant="outlined" color="primary" sx={{
-            borderRadius: '12px'
+          borderRadius: '12px'
         }} fullWidth={true}>
           Сбросить фильтр
         </Button>

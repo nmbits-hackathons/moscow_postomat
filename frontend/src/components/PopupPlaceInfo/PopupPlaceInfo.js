@@ -9,9 +9,10 @@ import { useTheme } from '@mui/material/styles';
 import { PostamatsFullInfoCard } from '../PostamatsFullInfoCard';
 import { useEffect, useState } from 'react';
 
-export const PopupPlaceInfo = ({ selectedPlace }) => {
+export const PopupPlaceInfo = ({ selectedPlace , cov}) => {
   const theme = useTheme();
   const [fullInfoCardOpen, setFullInfoCardOpen] = useState(null);
+  console.log('vvvvvvvvvvvvvvvvvvvvv', selectedPlace, cov)
   useEffect(() => {
     setFullInfoCardOpen(null);
   }, [selectedPlace]);
@@ -49,7 +50,7 @@ export const PopupPlaceInfo = ({ selectedPlace }) => {
             fontWeight: '900',
           }}
         >
-          {get(selectedPlace, 'title')}
+          {get(selectedPlace, 'title') == null ? 'Сектор' : get(selectedPlace, 'title')}
         </Typography>
         <IconButton
           size="large"
@@ -136,7 +137,7 @@ export const PopupPlaceInfo = ({ selectedPlace }) => {
               color: '#F62E46',
             }}
           >
-            {get(selectedPlace, 'square')}
+            {get(selectedPlace, 'coverage')}
           </Typography>
           <Typography
             align="left"

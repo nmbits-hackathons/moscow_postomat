@@ -11,6 +11,7 @@ export const getStateForPostamatsRequest = (state) => {
       underground: state.underground,
       house: state.houses,
     },
+    radius: state.radius / 1000,
     districts: state.district || [],
     areas: state.areas || [],
     model_keyword: state.model,
@@ -20,7 +21,7 @@ export const getStateForPostamatsRequest = (state) => {
       radius: 0,
     },
     postamat_count: state.nPostamats,
-    coverage: 0,
+    coverage: state.coverage / 40,
   };
 };
 // {
