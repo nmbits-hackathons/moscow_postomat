@@ -17,6 +17,7 @@ export const Favourites = () => {
       }}
     >
       <FavouritesCards />
+
       <Maps />
     </Box>
   );

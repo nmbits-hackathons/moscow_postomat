@@ -138,7 +138,7 @@ export const SideBar = ({ handleChangeMode, mode }) => {
           />
         </ListItemButton>
         <ListItemButton
-          onClick={() => handleNavigate(POSTAMATS_SETTINGS_PATH)}
+          onClick={() => handleNavigate(POSTAMATS_ANALYTICS_PATH)}
           sx={{
             minHeight: 48,
             flexFlow: 'column',

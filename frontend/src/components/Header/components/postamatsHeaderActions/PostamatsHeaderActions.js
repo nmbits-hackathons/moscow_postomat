@@ -19,6 +19,17 @@ export const PostamatsHeaderActions = () => {
   return (
     <div>
       <Button
+        endIcon={<TrendingUpIcon />}
+        onClick={() => handleNavigate(POSTAMATS_ANALYTICS_PATH)}
+        sx={{
+          borderBottom:
+            path === POSTAMATS_ANALYTICS_PATH ? '3px solid red' : '',
+          marginRight: '16px',
+        }}
+      >
+        Аналитика
+      </Button>
+      <Button
         endIcon={<TuneIcon />}
         onClick={() => handleNavigate(POSTAMATS_SETTINGS_PATH)}
         sx={{
@@ -27,17 +38,6 @@ export const PostamatsHeaderActions = () => {
         }}
       >
         Управление
-      </Button>
-      <Button
-        endIcon={<TrendingUpIcon />}
-        onClick={() => handleNavigate(POSTAMATS_ANALYTICS_PATH)}
-        sx={{
-          borderBottom:
-            path === POSTAMATS_ANALYTICS_PATH ? '3px solid red' : '',
-            marginRight: '16px',
-        }}
-      >
-        Аналитика
       </Button>
       <Button
         endIcon={<AirportShuttleIcon />}
