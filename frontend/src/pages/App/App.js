@@ -1,4 +1,4 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import {BrowserRouter, Routes, Route, useLocation} from 'react-router-dom';
 import {ThemeProvider, createTheme} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Maps from '../Maps';
@@ -25,6 +25,27 @@ import {Analytics, Logistics, Settings} from '../Postamats/components';
 
 export const darkThemeMode = 'dark';
 export const lightThemeMode = 'light';
+
+const Tup = () => {
+  const location = useLocation();
+  const path = location.pathname;
+  return (
+    <>
+      <div style={{
+        position: 'absolute',
+        left: '1',
+        right: '0',
+        zIndex: '10000',
+        bottom: '0',
+        top: '1',
+        marginBottom: '200px',
+        marginRight: '32px'
+      }}>
+        <img src={legend} alt='heat map legend'/>
+      </div>
+    </>
+  )
+}
 
 function App() {
   const [map, setMap] = useState(null);
@@ -62,19 +83,21 @@ function App() {
       <ThemeProvider theme={theme}>
         <SideBar {...{handleChangeMode, mode}} />
         <Header {...{showFilters, setShowFilters}} />
-        <div style={{position: 'absolute', left: '1', right: '0', zIndex: '10000', bottom: '0', top: '1', marginBottom: '200px', marginRight: '32px'}}>
-          <img src={legend} alt='heat map legend'/>
-        </div>
         <CssBaseline/>
         <Routes>
           <Route
             path={MAIN_PATH}
             element={
-              <Maps {...{handleTest, mode, showFilters, setShowFilters}} />
+              <div>
+                <Maps {...{handleTest, mode, showFilters, setShowFilters}} />, <Tup/>
+              </div>
             }
             exact
           />
-          <Route path={FAVOURITES_PATH} element={<Favourites/>} exact/>
+          <Route path={FAVOURITES_PATH} element={
+            <div>
+              <Favourites/>, <Tup/>
+            </div>} exact/>
           <Route path={POSTAMATS_ANALYTICS_PATH} element={<Analytics/>}/>
           <Route path={POSTAMATS_SETTINGS_PATH} element={<Settings/>}/>
           <Route path={POSTAMATS_LOGISTICS_PATH} element={<Logistics/>}/>
